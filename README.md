@@ -1,4 +1,4 @@
-#Dallas Cassandra Day KafkaSparkCasandraDemo
+#KafkaSparkDSEDemo
 #  Updated for DSE 5.0
 
 In order to run this demo, It is assumed that you have the following installed and available on your local system.
