@@ -18,7 +18,7 @@ package com.datastax.demo
 
 /**
  * Created by carybourgeois on 10/30/15.
-  *  Modifiied by jaosnhaugland on 10/20/16.
+  *  Modified by jasonhaugland on 10/20/16.
  */
 
 import java.sql.Timestamp
@@ -47,8 +47,6 @@ object SparkKafkaConsumer extends App {
   val appName = "SparkKafkaConsumer"
 
   val conf = new SparkConf()
-    .set("spark.cores.max", "2")
-    .set("spark.executor.memory", "512M")
     .setAppName(appName)
   val sc = SparkContext.getOrCreate(conf)
 
@@ -76,7 +74,7 @@ object SparkKafkaConsumer extends App {
           val currentMinute = sensorMinuteFormat.format(ts).dropRight(1)
           SensorEvent(payload(0), payload(1), currentMinute, ts, payload(4).toDouble, payload(5).toDouble)
         }).toDF("edge_id", "serial_number", "ts10min","ts", "depth", "value")
-        //  The primary key for "data" includes edge_id, serial_number, and ts.
+        //  The primary key for "sensor_detail" includes serial_number, and ts.
         //   So, this is all records
         df
           .write
