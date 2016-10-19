@@ -17,6 +17,7 @@
 
 /**
  * Created by carybourgeois on 10/30/15.
+ * Modified by jasonhaugland on 10/20/16.
  */
 import java.sql.Timestamp
 import java.util.Properties
@@ -24,8 +25,9 @@ import java.util.Properties
 import akka.actor.{Actor, ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
 import kafka.producer.{KeyedMessage, Producer, ProducerConfig}
+import scala.io.Source
 
-class produceMessages(brokers: String, topic: String, edge_id: String, numSensors : Int) extends Actor {
+class produceMessages(brokers: String, topic: String, edge_id: String, numSensors : Int, sensorFileName: String) extends Actor {
 
   val sigma = 1
   val xbar = 0
@@ -45,21 +47,24 @@ class produceMessages(brokers: String, topic: String, edge_id: String, numSensor
   def receive = {
     case "send" => {
       val threshold = scala.util.Random.nextGaussian();
-
-      val messages = for (sensor <- 1 to numSensors.toInt if scala.util.Random.nextGaussian() > threshold) yield {
-        val sensor_id = sensor.toString
-        val event_time = new Timestamp(System.currentTimeMillis())
-        val epoch_hr = (event_time.getTime/3600000).toString
+      val event_time = new Timestamp(System.currentTimeMillis())
+      val epoch_hr = (event_time.getTime/3600000).toString
+      var sensor = 0
+      val messages = for (line <- Source.fromFile(sensorFileName).getLines().drop(1) if sensor <= numSensors.toInt )yield {
+        val cols = line.split(",").map(_.trim)
+        sensor += 1
+        // grab the first column from the csv file holding the sensor id
+        val sensor_id = {
+          cols(0).toString()
+        }
         val depth = (scala.util.Random.nextGaussian() * sigma + xbar)
         val metric = (scala.util.Random.nextGaussian() * sigma + xbar)
         val str = s"${edge_id};${sensor_id};${epoch_hr};${event_time.toString};${depth.toString};${metric.toString}"
         if (sensor < 5)
           println(str)
-
         new KeyedMessage[String, String](topic, str)
       }
-
-      kafka.producer.send(messages: _*)
+      kafka.producer.send(messages.toSeq: _*)
     }
 
     case _ => println("Not a valid message!")
@@ -85,12 +90,14 @@ object KafkaStreamProducer extends App {
   println(s"numRecords $numRecords")
   val waitMillis = systemConfig.getLong("KafkaStreamProducer.waitMillis")
   println(s"waitMillis $waitMillis")
+  val sensorFileName = systemConfig.getString("KafkaStreamProducer.sensorFileName")
+  println(s"sensorFileName $sensorFileName")
 
   /*
    * Set up the Akka Actor
    */
   val system = ActorSystem("KafkaStreamProducer")
-  val messageActor = system.actorOf(Props(new produceMessages(kafkaHost, kafkaTopic, edgeId, numSensors)), name="genMessages")
+  val messageActor = system.actorOf(Props(new produceMessages(kafkaHost, kafkaTopic, edgeId, numSensors,sensorFileName)), name="genMessages")
 
   /*
    * Message Loop

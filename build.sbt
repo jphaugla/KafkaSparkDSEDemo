@@ -4,9 +4,15 @@ val globalSettings = Seq(
 )
 
 val akkaVersion = "2.3.12"
-val sparkVersion = "1.4.1"
-val sparkCassandraConnectorVersion = "1.4.0"
-val kafkaVersion = "0.8.2.2"
+//  use this for DSE 4.8.x
+// val sparkVersion = "1.4.1"
+val sparkVersion = "1.6.1"
+
+//  use this for DSE 4.8.x
+// val sparkCassandraConnectorVersion = "1.4.0"
+val sparkCassandraConnectorVersion = "1.6.1-s_2.10"
+// val kafkaVersion = "0.8.2.2"
+val kafkaVersion = "0.10.0.1"
 val scalaTestVersion = "2.2.4"
 
 
@@ -30,12 +36,12 @@ lazy val producerDeps = Seq(
 )
 
 lazy val consumerDeps = Seq(
-  "com.datastax.spark" % "spark-cassandra-connector_2.10" % sparkCassandraConnectorVersion,
+  "datastax" % "spark-cassandra-connector" % sparkCassandraConnectorVersion,
   "org.apache.spark"  %% "spark-mllib"           % sparkVersion % "provided",
   "org.apache.spark"  %% "spark-graphx"          % sparkVersion % "provided",
   "org.apache.spark"  %% "spark-sql"             % sparkVersion % "provided",
   "org.apache.spark"  %% "spark-streaming"       % sparkVersion % "provided",
-  "org.apache.spark"  %% "spark-streaming-kafka" % sparkVersion % "provided",
-  "com.databricks"    %% "spark-csv"             % "1.2.0"
+  "org.apache.spark"  %% "spark-streaming-kafka" % sparkVersion % "provided"
+// , "databricks"    %% "spark-csv"             % sparkVersion 
 )
     

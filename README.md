@@ -75,7 +75,6 @@ Show all of the messages in a topic from the beginning
   
 ###To build the demo
 
-  * Create the Cassandra Keyspaces and Tables using the `CreateTable.cql` script
   * Navigate to the root directory of the project where you downloaded
   * Build the Producer with this command:
   
