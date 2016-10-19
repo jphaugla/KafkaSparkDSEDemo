@@ -1,4 +1,4 @@
-#Dallas Cassandra Day KafkaSparkCasandraDemo
+#KafkaSparkDSEDemo
 #  Updated for DSE 5.0
 
 In order to run this demo, It is assumed that you have the following installed and available on your local system.
@@ -71,7 +71,7 @@ Show all of the messages in a topic from the beginning
   * Execute the following command:
   
   
-       `git clone https://github.com/CaryBourgeois/KafkaSparkCassandraDemo.git`
+       `git clone git@github.com:jphaugla/KafkaSparkDSEDemo.git`
   
 ###To build the demo
 
