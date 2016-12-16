@@ -13,32 +13,47 @@ In order to run this demo, It is assumed that you have the following installed a
 ##Getting Started with Kafka
 Use the steps below to setup up a local instance of Kafka for this example. This is based off of apache-kafka_2.10-0.10.0.1.
 
+MAC helpful tips at https://oleweidner.com/blog/2015/getting-started-with-kafka-on-osx/ 
+Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/
 ###1. Locate and download Apache Kafka
 
 Kafka can be located at this URL: [http://kafka.apache.org/downloads.html](http://kafka.apache.org/downloads.html)
 
 You will want to download and install the binary version for Scala 2.10.
 
+
 ###2. Install Apache Kafka
 
 Once downloaded you will need to extract the file. It will create a folder/directory. Move this to a location of your choice.
 
-###3. Start ZooKeeper and Kafka
+**** (on mac)
+brew install kafka 
+pip install kafka-python 
+**** (on ubuntu)
+sudo apt-get install zookeeperd
+wget http://mirror.fibergrid.in/apache/kafka/0.10.1.0/kafka_2.11-0.10.1.0.tgz
+sudo mkdir /opt/Kafkax
+cd /opt/Kafka
+sudo tar -xvf ~datastax/kafka_2.10-0.10.1.0.tgz -C /opt/Kafka
 
+###3. Start ZooKeeper and Kafka
 Start local copy of zookeeper
 
+####  on Mac
   * `<kafka home dir>bin/zookeeper-server-start config/zookeeper.properties`
 or 
   * zkServer start
-
-Start local copy of Kafka
-
   * `kafka-server-start  /usr/local/etc/kafka/server.properties`
+
+####  on Ubuntu, add Kafka to user $PATH
+sudo /opt/Kafka/kafka_2.10-0.10.1.0/bin/kafka-server-start.sh /opt/Kafka/kafka_2.10-0.10.1.0/config/server.properties
+(zookeeper automatically starts on install)
 
 ###4. Prepare a message topic for use.
 
 Create the topic we will use for the demo
 
+####  on ubuntu, command is kafka-topics.sh (sh suffix needed)
   * `kafka-topics --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic stream_ts`
 
 Validate the topic was created. 
@@ -46,6 +61,7 @@ Validate the topic was created.
   * `kafka-topics --zookeeper localhost:2181 --list`
   
 ##A Couple of other useful Kafka commands
+####  on ubuntu, commands need sh suffix 
 
 Delete the topic. (Note: The server.properties file must contain `delete.topic.enable=true` for this to work)
 
@@ -61,7 +77,7 @@ Show all of the messages in a topic from the beginning
 
   * `https://academy.datastax.com/downloads/welcome`
 
-###2. Starting DSE tarball install on the local OSX or Linux machine
+###2. Starting DSE tarball install on the local OSX or Linux machine (-s starts search, -k starts Spark)
 
   * `dse cassandra -k -s` 
   

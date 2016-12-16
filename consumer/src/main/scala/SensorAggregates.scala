@@ -54,8 +54,7 @@ object SensorAggregates {
       // how do I save this in the rdd
       val currentMinute = sensorMinuteFormat.format(ts).dropRight(1)
 
-      val df_meta = csc
-        .read
+      val df_meta = csc.read
         .format("org.apache.spark.sql.cassandra")
         .options(Map("table" -> "sensor_meta", "keyspace" -> "demo"))
         .load() // This DataFrame will use a spark.cassandra.input.size of 32
