@@ -32,8 +32,13 @@ brew install kafka
 pip install kafka-python 
 ### (on ubuntu)
 sudo apt-get install zookeeperd
-wget http://mirror.fibergrid.in/apache/kafka/0.10.1.0/kafka_2.10-0.10.1.0.tgz sudo mkdir /opt/Kafkax
+
+wget http://mirror.fibergrid.in/apache/kafka/0.10.1.0/kafka_2.10-0.10.1.0.tgz 
+
+sudo mkdir /opt/Kafkax
+
 cd /opt/Kafka
+
 sudo tar -xvf ~datastax/kafka_2.10-0.10.1.0.tgz -C /opt/Kafka
 
 ###3. Start ZooKeeper and Kafka
