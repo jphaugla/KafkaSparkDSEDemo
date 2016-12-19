@@ -14,7 +14,9 @@ In order to run this demo, It is assumed that you have the following installed a
 Use the steps below to setup up a local instance of Kafka for this example. This is based off of apache-kafka_2.10-0.10.1.0.
 
 MAC helpful tips at https://oleweidner.com/blog/2015/getting-started-with-kafka-on-osx/ 
-Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/ ###1. Locate and download Apache Kafka
+Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/ 
+
+###1. Locate and download Apache Kafka
 
 Kafka can be located at this URL: [http://kafka.apache.org/downloads.html](http://kafka.apache.org/downloads.html)
 
