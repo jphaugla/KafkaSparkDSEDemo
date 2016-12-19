@@ -11,11 +11,10 @@ In order to run this demo, It is assumed that you have the following installed a
   4. sbt
 
 ##Getting Started with Kafka
-Use the steps below to setup up a local instance of Kafka for this example. This is based off of apache-kafka_2.10-0.10.0.1.
+Use the steps below to setup up a local instance of Kafka for this example. This is based off of apache-kafka_2.10-0.10.1.0.
 
 MAC helpful tips at https://oleweidner.com/blog/2015/getting-started-with-kafka-on-osx/ 
-Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/
-###1. Locate and download Apache Kafka
+Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/ ###1. Locate and download Apache Kafka
 
 Kafka can be located at this URL: [http://kafka.apache.org/downloads.html](http://kafka.apache.org/downloads.html)
 
@@ -31,8 +30,7 @@ brew install kafka
 pip install kafka-python 
 **** (on ubuntu)
 sudo apt-get install zookeeperd
-wget http://mirror.fibergrid.in/apache/kafka/0.10.1.0/kafka_2.11-0.10.1.0.tgz
-sudo mkdir /opt/Kafkax
+wget http://mirror.fibergrid.in/apache/kafka/0.10.1.0/kafka_2.10-0.10.1.0.tgz sudo mkdir /opt/Kafkax
 cd /opt/Kafka
 sudo tar -xvf ~datastax/kafka_2.10-0.10.1.0.tgz -C /opt/Kafka
 
@@ -91,6 +89,9 @@ Show all of the messages in a topic from the beginning
   
        `git clone git@github.com:jphaugla/KafkaSparkDSEDemo.git`
   
+###  need to have sbt installed
+#### on ubuntu apt-get install sbt
+#### on mac brew install sbt
 ###To build the demo
 
   * Navigate to the root directory of the project where you downloaded
@@ -126,3 +127,6 @@ This assumes you already have Kafka and DSE up and running and configured as in 
   
   *  From the root directory of the project can do one-time aggregate to sensor_full_summary.  To rerun, truncate, the demo.sensor_full_summary table.
     `dse spark-submit --packages org.apache.spark:spark-streaming-kafka-assembly_2.10:1.6.1 --class SensorAggregates consumer/target/scala-2.10/consumer_2.10-0.1.jar`
+
+####  PROBLEMS with build.sbt
+The cleaner new build.sbt did not work on my Mac running DSE 5.0.3.  If see dependency problems switch back to build.sbt.old

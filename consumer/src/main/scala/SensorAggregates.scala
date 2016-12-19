@@ -29,9 +29,11 @@ import org.apache.spark.{SparkConf, SparkContext}
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-import org.apache.spark.sql.SaveMode
-import org.apache.spark.sql.cassandra.CassandraSQLContext
 import org.apache.spark.{SparkConf, SparkContext}
+//import org.apache.spark.sql.SQLContext
+
+import org.apache.spark.sql.{SQLContext, SaveMode}
+
 
 
 /**
@@ -41,11 +43,14 @@ object SensorAggregates {
 
   def main(args: Array[String]) {
 
-    //  StreamingExamples.setStreamingLogLevels()
+    val appName = "SensorAggregates"
+    val conf = new SparkConf()
+      .setAppName(appName)
+    val sc = SparkContext.getOrCreate(conf)
 
-    val sparkConf = new SparkConf().setAppName("SensorAggregates")
-    val sc = new SparkContext(sparkConf)
-    val csc = new CassandraSQLContext(sc)
+    val sqlContext = SQLContext.getOrCreate(sc)
+
+
 
     System.out.println("starting SensorAggregates")
       val ts = Calendar.getInstance().getTime()
@@ -54,12 +59,14 @@ object SensorAggregates {
       // how do I save this in the rdd
       val currentMinute = sensorMinuteFormat.format(ts).dropRight(1)
 
-      val df_meta = csc.read
+      val df_meta = sqlContext
+        .read
         .format("org.apache.spark.sql.cassandra")
         .options(Map("table" -> "sensor_meta", "keyspace" -> "demo"))
         .load() // This DataFrame will use a spark.cassandra.input.size of 32
 
-      val df_summary = csc.read
+      val df_summary = sqlContext
+        .read
         .format("org.apache.spark.sql.cassandra")
         .options(Map("table" -> "sensor_summary", "keyspace" -> "demo"))
         .load()
