@@ -27,10 +27,10 @@ You will want to download and install the binary version for Scala 2.10.
 
 Once downloaded you will need to extract the file. It will create a folder/directory. Move this to a location of your choice.
 
-**** (on mac)
+### (on mac)
 brew install kafka 
 pip install kafka-python 
-**** (on ubuntu)
+### (on ubuntu)
 sudo apt-get install zookeeperd
 wget http://mirror.fibergrid.in/apache/kafka/0.10.1.0/kafka_2.10-0.10.1.0.tgz sudo mkdir /opt/Kafkax
 cd /opt/Kafka
@@ -131,4 +131,4 @@ This assumes you already have Kafka and DSE up and running and configured as in 
     `dse spark-submit --packages org.apache.spark:spark-streaming-kafka-assembly_2.10:1.6.1 --class SensorAggregates consumer/target/scala-2.10/consumer_2.10-0.1.jar`
 
 ####  PROBLEMS with build.sbt
-The cleaner new build.sbt did not work on my Mac running DSE 5.0.3.  If see dependency problems switch back to build.sbt.old
+The cleaner new build.sbt did not work on my Mac running DSE 5.0.3.  If see dependency problems switch back to build.sbt.mac
