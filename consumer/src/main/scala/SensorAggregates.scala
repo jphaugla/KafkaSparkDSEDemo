@@ -30,8 +30,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 import org.apache.spark.{SparkConf, SparkContext}
-//import org.apache.spark.sql.SQLContext
-
 import org.apache.spark.sql.{SQLContext, SaveMode}
 
 

@@ -1,12 +1,14 @@
 val globalSettings = Seq(
   version := "0.1",
-  scalaVersion := "2.10.5",
+  scalaVersion := "2.11.8",
   resolvers += ("DataStax Repo" at "https://datastax.artifactoryonline.com/datastax/public-repos/")
 )
 val akkaVersion = "2.3.12"
 val sparkVersion = "1.6.1"
 
-val kafkaVersion = "0.10.1.0"
+val sparkCassandraConnectorVersion = "1.6.1"
+val kafkaVersion = "0.10.1.1"
+val scalaTestVersion = "2.2.4"
 
 lazy val producer = (project in file("producer"))
   .settings(name := "producer")
@@ -20,7 +22,7 @@ lazy val consumer = (project in file("consumer"))
 
 lazy val producerDeps = Seq(
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-  "org.apache.kafka" % "kafka_2.10" % kafkaVersion
+  "org.apache.kafka" % "kafka_2.11" % kafkaVersion
     exclude("javax.jms", "jms")
     exclude("com.sun.jdmk", "jmxtools")
     exclude("com.sun.jmx", "jmxri")
