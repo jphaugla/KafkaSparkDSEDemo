@@ -1,0 +1,1 @@
+$SPARK_HOME/bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 --jars $SPARK_HOME/jars/spark-cassandra-connector-assembly-2.0.0-M3-81-gd093296.jar --class SensorAggregates consumer/target/scala-2.11/consumer_2.11-0.1.jar
