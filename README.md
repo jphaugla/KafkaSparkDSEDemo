@@ -66,6 +66,7 @@ Create the topic we will use for the demo
 
 ####  on ubuntu, command is kafka-topics.sh (sh suffix needed)
   * `kafka-topics --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic stream_ts`
+  * `kafka-topics --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic full_summary`
 
 Validate the topic was created. 
 
@@ -148,7 +149,7 @@ This assumes you already have Kafka and DSE up and running and configured as in 
     ./runAggregate.sh   (if using DSE embedded 5.0.x)
     ./runAggregate2.sh  (if using standalone spark 2.0.2)
 
-  * Can write sensor_full_summary back to a new kafka topic
+  * Can write sensor_full_summary back to a full_summary kafka topic
     ./runWriteBack.sh   (if using DSE embedded 5.0.x)
     ./runWriteBack2.sh  (if using standalone spark 2.0.2)
   
