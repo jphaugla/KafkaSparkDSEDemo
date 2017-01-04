@@ -147,6 +147,10 @@ This assumes you already have Kafka and DSE up and running and configured as in 
   * After running for some time can run aggregate to create sensor_full_summary
     ./runAggregate.sh   (if using DSE embedded 5.0.x)
     ./runAggregate2.sh  (if using standalone spark 2.0.2)
+
+  * Can write sensor_full_summary back to a new kafka topic
+    ./runWriteBack.sh   (if using DSE embedded 5.0.x)
+    ./runWriteBack2.sh  (if using standalone spark 2.0.2)
   
 ####  PROBLEMS with build.sbt
 The cleaner new build.sbt did not work on my Mac running DSE 5.0.3 or DSE 5.0.5.  If see dependency problems switch back to build.sbt.mac and then use 

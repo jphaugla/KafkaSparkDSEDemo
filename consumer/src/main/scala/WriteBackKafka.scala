@@ -26,65 +26,54 @@ import org.apache.spark.{SparkConf, SparkContext}
 // scalastyle:off println
 //  package org.apache.spark.examples.streaming
 
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.Properties
 
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.sql.{SQLContext, SaveMode}
-
 
 
 /**
  *
  */
-object SensorAggregates {
+object WriteBackKafka  extends App {
 
-  def main(args: Array[String]) {
-
-    val appName = "SensorAggregates"
+    val appName = "WriteBackKafka"
     val conf = new SparkConf()
       .setAppName(appName)
     val sc = SparkContext.getOrCreate(conf)
 
     val sqlContext = SQLContext.getOrCreate(sc)
 
-
-
     System.out.println(s"starting $appName")
-      val ts = Calendar.getInstance().getTime()
-      val sensorMinuteFormat = new SimpleDateFormat("YYYYMMddHHmm")
-      //   since want every 10 minutes, drop off the last minute place
-      // how do I save this in the rdd
-      val currentMinute = sensorMinuteFormat.format(ts).dropRight(1)
 
-      val df_meta = sqlContext
+//  read in sensor_full_summary table
+    val df_full_summary = sqlContext
         .read
-        .format("org.apache.spark.sql.cassandra")
-        .options(Map("table" -> "sensor_meta", "keyspace" -> "demo"))
-        .load() // This DataFrame will use a spark.cassandra.input.size of 32
-
-      val df_summary = sqlContext
-        .read
-        .format("org.apache.spark.sql.cassandra")
-        .options(Map("table" -> "sensor_summary", "keyspace" -> "demo"))
-        .load()
-
-      //   since materialized view is partitioned on sensor_minute_snapshot, this will push down to cassandra
-     val predicateString = "sensor_minute_snapshot=" + currentMinute
-   //  commenting out predicate filter so will do all
-    //   should truncate sensor_full_summary before running
-     // df_summary.filter(predicateString).show()
-
-      val df_full_summary = df_meta.join(df_summary, "serial_number")
-
-      df_full_summary.show()
-
-      df_full_summary.write.mode(SaveMode.Append)
         .format("org.apache.spark.sql.cassandra")
         .options(Map("table" -> "sensor_full_summary", "keyspace" -> "demo"))
-        .save()
-     System.out.println(s"Completed $appName")
-    }
+        .load()
 
+  //  write each record of the sensor_full_summary table to the kafka "full_summary" topic
+     df_full_summary.foreachPartition(partition => {
+       val  props = new Properties()
+       props.put("bootstrap.servers", "localhost:9092")
+
+       props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+       props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+
+       val producer = new KafkaProducer[String, String](props)
+
+       val kafkaTopic="full_summary"
+       partition.foreach( record => {
+          val data = record.toString()
+          val message = new ProducerRecord [String, String](kafkaTopic, null, data)
+          producer.send(message)
+       })
+       producer.close()
+     }
+     )
+
+     System.out.println(s"Completed $appName")
 }
 // scalastyle:on println
