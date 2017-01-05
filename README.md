@@ -1,6 +1,7 @@
 #KafkaSparkDSEDemo
 #  Updated for DSE 5.0
 #  Also updated for standalone Spark 2.0.2
+#  Added python version in consumer/src/main/python
 
 The purpose of this demo is to demonstrate a simple Kafka/Spark/Scala IOT streaming example.  So, this has a scala program to create "sensor-like" load as well as a spark streaming job to write this "sensor data" to DataStax.
 
