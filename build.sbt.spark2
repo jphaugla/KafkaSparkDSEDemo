@@ -32,7 +32,7 @@ lazy val producerDeps = Seq(
 )
 
 lazy val consumerDeps = Seq(
-  "datastax" % "spark-cassandra-connector" % sparkCassandraConnectorVersion,
+  "com.datastax.spark" % "spark-cassandra-connector" % sparkCassandraConnectorVersion,
   "org.apache.spark"  %% "spark-mllib"           % sparkVersion % "provided",
   "org.apache.spark"  %% "spark-graphx"          % sparkVersion % "provided",
   "org.apache.spark"  %% "spark-sql"             % sparkVersion % "provided",

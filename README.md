@@ -1,7 +1,7 @@
 #KafkaSparkDSEDemo
 #  Updated for DSE 5.0
 #  Also updated for standalone Spark 2.0.2
-#  Added python version in consumer/src/main/python
+#  Added python version of code base in consumer/src/main/python
 
 The purpose of this demo is to demonstrate a simple Kafka/Spark/Scala IOT streaming example.  So, this has a scala program to create "sensor-like" load as well as a spark streaming job to write this "sensor data" to DataStax.
 
@@ -46,7 +46,10 @@ sudo tar -xvf ~datastax/kafka_2.11-0.10.1.1.tgz -C /opt/Kafka
 for convenience, created a soft link to /opt/Kafka/kafka 
 cd /opt/Kafka
 ln -s kafka_2.11-0.10.1.1 kafka
-
+# must install for kafka python on ubuntu if doing any of the python code
+sudo apt-get install pip
+pip install kafka-python 
+(need to open a new session after doing kafka-python install)
 ###3. Start ZooKeeper and Kafka
 Start local copy of zookeeper
 
@@ -131,6 +134,14 @@ Show all of the messages in a topic from the beginning
   
     `sbt consumer/package`
 #   see note at bottom if errors here
+
+### Addition step if running on standalone spark
+Must add the spark cassandra connector to the spark project 
+git clone https://github.com/datastax/spark-cassandra-connector
+cd spark-cassandra-connector
+sbt -Dscala-2.11=true assembly
+copy the resulting jar file to a known location 
+reference the jar file in the ./runConsumer2.sh script
 
 ###To run the demo
 
