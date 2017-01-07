@@ -2,6 +2,7 @@
 #  Updated for DSE 5.0
 #  Also updated for standalone Spark 2.0.2
 #  Added python version of code base in consumer/src/main/python
+#  Added fat jar option using sbt-assembly
 
 The purpose of this demo is to demonstrate a simple Kafka/Spark/Scala IOT streaming example.  So, this has a scala program to create "sensor-like" load as well as a spark streaming job to write this "sensor data" to DataStax.
 
@@ -143,6 +144,10 @@ sbt -Dscala-2.11=true assembly
 copy the resulting jar file to a known location 
 reference the jar file in the ./runConsumer2.sh script
 
+#  if want to use a fat jar file because can't resolve dependencies in spark-submit maybe because of no internet connection.  This will build a much larger jar file
+
+`sbt -Dscala-2.11=true consumer/assembly`
+
 ###To run the demo
 
 This assumes you already have Kafka and DSE up and running and configured as in the steps above.
@@ -156,14 +161,17 @@ This assumes you already have Kafka and DSE up and running and configured as in 
 
     ./runConsumer.sh   (if using DSE embedded 5.0.x)
     ./runConsumer2.sh  (if using standalone spark 2.0.2)
+    ./runConsumer2.full.sh  (if using standalone spark 2.0.2 with fat jar)
 
   * After running for some time can run aggregate to create sensor_full_summary
     ./runAggregate.sh   (if using DSE embedded 5.0.x)
     ./runAggregate2.sh  (if using standalone spark 2.0.2)
+    ./runAggregate2.full.sh  (if using standalone spark 2.0.2 with fat jar)
 
   * Can write sensor_full_summary back to a full_summary kafka topic
     ./runWriteBack.sh   (if using DSE embedded 5.0.x)
     ./runWriteBack2.sh  (if using standalone spark 2.0.2)
+    ./runWriteBack2.full.sh  (if using standalone spark 2.0.2 with fat jar)
   
 ####  PROBLEMS with build.sbt
 The cleaner new build.sbt did not work on my Mac running DSE 5.0.3 or DSE 5.0.5.  If see dependency problems switch back to build.sbt.mac and then use 
