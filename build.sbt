@@ -7,7 +7,7 @@ val akkaVersion = "2.3.12"
 val sparkVersion = "1.6.1"
 
 val sparkCassandraConnectorVersion = "1.6.1"
-val kafkaVersion = "0.10.1.1"
+val kafkaVersion = "0.8.2.2"
 val scalaTestVersion = "2.2.4"
 
 lazy val producer = (project in file("producer"))
