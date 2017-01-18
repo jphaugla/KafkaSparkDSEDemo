@@ -174,5 +174,6 @@ This assumes you already have Kafka and DSE up and running and configured as in 
     ./runWriteBack2.full.sh  (if using standalone spark 2.0.2 with fat jar)
   
 ####  PROBLEMS with build.sbt
-The cleaner new build.sbt did not work on my Mac running DSE 5.0.3 or DSE 5.0.5.  If see dependency problems switch back to build.sbt.mac and then use 
-	runConsumer.sh.mac and runAggregate.sh.mac
+Needed to clean out jar files on spark and dse dependencies
+rm -rf ~/.ivy2/cache/org.apache.spark/*
+rm -rf ~/.ivy2/cache/com.datastax.dse/*
