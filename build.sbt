@@ -30,6 +30,6 @@ lazy val producerDeps = Seq(
 
 lazy val consumerDeps = Seq(
   "com.datastax.dse" % "dse-spark-dependencies" % "5.0.4" % "provided",
-  "org.apache.spark"  %% "spark-streaming-kafka" % sparkVersion % "provided"
+  "org.apache.spark" %% "spark-streaming-kafka" % sparkVersion % "provided" 
 )
     
