@@ -128,10 +128,10 @@ Show all of the messages in a topic from the beginning
 ###  need to have sbt installed
 #### on ubuntu 
 
-	wget http://apt.typesafe.com/repo-deb-build-0002.deb
-	sudo dpkg -i repo-deb-build-0002.deb
+	echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
 	sudo apt-get update
-	apt-get install sbt
+	sudo apt-get install sbt
 
 #### on mac 
 	brew install sbt
@@ -166,7 +166,7 @@ reference the jar file in the ./runConsumer2.sh script
 
 if want to use a fat jar file because can't resolve dependencies in spark-submit maybe because of no internet connection.  This will build a much larger jar file
 
-	`sbt -Dscala-2.11=true consumer/assembly`
+	sbt -Dscala-2.11=true consumer/assembly
 
 ###To run the demo
 
@@ -178,21 +178,21 @@ This assumes you already have Kafka and DSE up and running and configured as in 
     
   
   * From the root directory of the project start the consumer app
-	./runConsumer.sh   (if using DSE embedded 5.0.x)
-	./runConsumer2.sh  (if using standalone spark 2.0.2)
-	./runConsumer2.full.sh  (if using standalone spark 2.0.2 with fat jar)
+	`./runConsumer.sh   (if using DSE embedded 5.0.x)`
+	`./runConsumer2.sh  (if using standalone spark 2.0.2)`
+	`./runConsumer2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
 
   * After running for some time can run aggregate to create sensor_full_summary
-	./runAggregate.sh   (if using DSE embedded 5.0.x)
-	./runAggregate2.sh  (if using standalone spark 2.0.2)
-	./runAggregate2.full.sh  (if using standalone spark 2.0.2 with fat jar)
+	`./runAggregate.sh   (if using DSE embedded 5.0.x)`
+	`./runAggregate2.sh  (if using standalone spark 2.0.2)`
+	`./runAggregate2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
 
   * Can write sensor_full_summary back to a full_summary kafka topic
-	./runWriteBack.sh   (if using DSE embedded 5.0.x)
-	./runWriteBack2.sh  (if using standalone spark 2.0.2)
-	./runWriteBack2.full.sh  (if using standalone spark 2.0.2 with fat jar)
+	`./runWriteBack.sh   (if using DSE embedded 5.0.x)`
+	`./runWriteBack2.sh  (if using standalone spark 2.0.2)`
+	`./runWriteBack2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
   
-####  PROBLEMS with build.sbt
+####  PROBLEMS with build`.sbt
 Needed to clean out jar files on spark and dse dependencies
-	rm -rf ~/.ivy2/cache/org.apache.spark/*
-	rm -rf ~/.ivy2/cache/com.datastax.dse/*
+	`rm -rf ~/.ivy2/cache/org.apache.spark/*`
+	`rm -rf ~/.ivy2/cache/com.datastax.dse/*`
