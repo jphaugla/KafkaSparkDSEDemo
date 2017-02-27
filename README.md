@@ -14,7 +14,7 @@ In order to run this demo, It is assumed that you have the following installed a
   4. sbt
 
 ##Getting Started with Kafka
-Use the steps below to setup up a local instance of Kafka for this example. This is based off of apache-kafka_2.11-0.10.1.1
+Use the steps below to setup up a local instance of Kafka for this example. This is based off of kafka_2.11-0.10.2.0.tgz
 
 
 Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/ 
@@ -32,31 +32,28 @@ download and install the binary version for Scala 2.11.
 Once downloaded you will need to extract the file. It will create a folder/directory. Move this to a location of your choice.
 
 #### (on mac)
-brew install kafka 
 
-pip install kafka-python 
+	`brew install kafka`
+	`pip install kafka-python`
+
 #### (on ubuntu)
-sudo apt-get install zookeeperd
 
-wget http://mirror.fibergrid.in/apache/kafka/0.10.1.1/kafka_2.11-0.10.1.1.tgz 
-
-sudo mkdir /opt/Kafka
-
-cd /opt/Kafka
-
-sudo tar -xvf ~datastax/kafka_2.11-0.10.1.1.tgz -C /opt/Kafka
+	`sudo apt-get install zookeeperd`
+	`wget http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-0.10.2.0.tgz`
+	`sudo mkdir /opt/Kafka`
+	`cd /opt/Kafka`
+	`sudo tar -xvf ~datastax/kafka_2.11-0.10.2.0.tgz -C /opt/Kafka`
 
 for convenience, created a soft link to /opt/Kafka/kafka 
 
-cd /opt/Kafka
+	`cd /opt/Kafka`
+	`ln -s kafka_2.11-0.10.2.0 kafka`
 
-ln -s kafka_2.11-0.10.1.1 kafka
 # for kafka and python on ubuntu 
-sudo apt-get install pip
 
-pip install kafka-python 
+	`sudo apt-get install python-pip python-dev build-essential`
+	`sudo pip install kafka-python`
 
-(need to open a new session after doing kafka-python install)
 ### Start ZooKeeper and Kafka
 Start local copy of zookeeper
 
@@ -66,8 +63,11 @@ or
   * zkServer start
   * `kafka-server-start  /usr/local/etc/kafka/server.properties`
 
-####  on Ubuntu, add Kafka to user $PATH
-sudo /opt/Kafka/kafka/bin/kafka-server-start.sh /opt/Kafka/kafka/config/server.properties
+####  on Ubuntu
+
+	`add kafka bin to the PATH`
+	`sudo /opt/Kafka/kafka/bin/kafka-server-start.sh /opt/Kafka/kafka/config/server.properties`
+
 (zookeeper automatically starts on install)
 
 moving forward, manage zookeeper on ubuntu with "service zookeeper status"
@@ -178,21 +178,25 @@ This assumes you already have Kafka and DSE up and running and configured as in 
     
   
   * From the root directory of the project start the consumer app
+
 	`./runConsumer.sh   (if using DSE embedded 5.0.x)`
 	`./runConsumer2.sh  (if using standalone spark 2.0.2)`
 	`./runConsumer2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
 
   * After running for some time can run aggregate to create sensor_full_summary
+
 	`./runAggregate.sh   (if using DSE embedded 5.0.x)`
 	`./runAggregate2.sh  (if using standalone spark 2.0.2)`
 	`./runAggregate2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
 
   * Can write sensor_full_summary back to a full_summary kafka topic
+
 	`./runWriteBack.sh   (if using DSE embedded 5.0.x)`
 	`./runWriteBack2.sh  (if using standalone spark 2.0.2)`
 	`./runWriteBack2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
   
-####  PROBLEMS with build`.sbt
+####  PROBLEMS with build.sbt
 Needed to clean out jar files on spark and dse dependencies
+
 	`rm -rf ~/.ivy2/cache/org.apache.spark/*`
 	`rm -rf ~/.ivy2/cache/com.datastax.dse/*`
