@@ -1,8 +1,8 @@
-#KafkaSparkDSEDemo
-#  Updated for DSE 5.0
-#  Also updated for standalone Spark 2.0.2
-#  Added python version of code base in consumer/src/main/python
-#  Added fat jar option using sbt-assembly
+# KafkaSparkDSEDemo
+  Updated for DSE 5.0
+  Also updated for standalone Spark 2.0.2
+  Added python version of code base in consumer/src/main/python
+  Added fat jar option using sbt-assembly
 
 The purpose of this demo is to demonstrate a simple Kafka/Spark/Scala IOT streaming example.  So, this has a scala program to create "sensor-like" load as well as a spark streaming job to write this "sensor data" to DataStax.
 
@@ -19,21 +19,23 @@ Use the steps below to setup up a local instance of Kafka for this example. This
 
 Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/ 
 
-###1. Locate and download Apache Kafka
+### Locate and download Apache Kafka
 
-Kafka can be located at this URL: [http://kafka.apache.org/downloads.html](http://kafka.apache.org/downloads.html)
+Kafka can be located at this URL: 
+	[http://kafka.apache.org/downloads.html](http://kafka.apache.org/downloads.html)
 
-You will want to download and install the binary version for Scala 2.11.
+download and install the binary version for Scala 2.11.
 
 
-###2. Install Apache Kafka
+### Install Apache Kafka
 
 Once downloaded you will need to extract the file. It will create a folder/directory. Move this to a location of your choice.
 
-### (on mac)
+#### (on mac)
 brew install kafka 
+
 pip install kafka-python 
-### (on ubuntu)
+#### (on ubuntu)
 sudo apt-get install zookeeperd
 
 wget http://mirror.fibergrid.in/apache/kafka/0.10.1.1/kafka_2.11-0.10.1.1.tgz 
@@ -45,13 +47,17 @@ cd /opt/Kafka
 sudo tar -xvf ~datastax/kafka_2.11-0.10.1.1.tgz -C /opt/Kafka
 
 for convenience, created a soft link to /opt/Kafka/kafka 
+
 cd /opt/Kafka
+
 ln -s kafka_2.11-0.10.1.1 kafka
-# must install for kafka python on ubuntu if doing any of the python code
+# for kafka and python on ubuntu 
 sudo apt-get install pip
+
 pip install kafka-python 
+
 (need to open a new session after doing kafka-python install)
-###3. Start ZooKeeper and Kafka
+### Start ZooKeeper and Kafka
 Start local copy of zookeeper
 
 ####  on Mac
@@ -63,13 +69,14 @@ or
 ####  on Ubuntu, add Kafka to user $PATH
 sudo /opt/Kafka/kafka/bin/kafka-server-start.sh /opt/Kafka/kafka/config/server.properties
 (zookeeper automatically starts on install)
+
 moving forward, manage zookeeper on ubuntu with "service zookeeper status"
 
-###4. Prepare a message topic for use.
+### Prepare a message topic for use.
 
 Create the topic we will use for the demo
 
-####  on ubuntu, command is kafka-topics.sh (sh suffix needed)
+###  on ubuntu, command is kafka-topics.sh (sh suffix needed)
   * `kafka-topics --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic stream_ts`
   * `kafka-topics --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic full_summary`
 
@@ -77,7 +84,7 @@ Validate the topic was created.
 
   * `kafka-topics --zookeeper localhost:2181 --list`
   
-##A Couple of other useful Kafka commands
+### A Couple of other useful Kafka commands
 ####  on ubuntu, commands need sh suffix 
 
 Delete the topic. (Note: The server.properties file must contain `delete.topic.enable=true` for this to work)
@@ -90,11 +97,11 @@ Show all of the messages in a topic from the beginning
   
 #Getting Started with Local DSE/Cassandra
 
-###1. Download and install Datastax Enterprise v5.x
+### Download and install Datastax Enterprise v5.x
 
   * `https://academy.datastax.com/downloads/welcome`
 
-###2. Starting DSE tarball install on the local OSX or Linux machine (-s starts search, -k starts Spark)
+### Starting DSE tarball install on the local OSX or Linux machine (-s starts search, -k starts Spark)
     search could be easily incorporated to this demo using the sensor_full_summary table
 
   * `dse cassandra -k -s` 
@@ -119,12 +126,20 @@ Show all of the messages in a topic from the beginning
     `cqlsh -f consumer/resources/cql/loaddata.cql`
 
 ###  need to have sbt installed
-#### on ubuntu apt-get install sbt
-#### on mac brew install sbt
+#### on ubuntu 
+
+	wget http://apt.typesafe.com/repo-deb-build-0002.deb
+        sudo dpkg -i repo-deb-build-0002.deb
+        sudo apt-get update
+	apt-get install sbt
+
+#### on mac 
+	brew install sbt
+
 ###To build the demo
 
-#   to do standalone spark switch the build.sbt to build.sbt.spark2
-#     otherwise, this is set up for embedded datastax
+    to do standalone spark switch the build.sbt to build.sbt.spark2
+     otherwise, this is set up for embedded datastax
 
   * Navigate to the root directory of the project where you downloaded
   * Build the Producer with this command:
@@ -134,17 +149,23 @@ Show all of the messages in a topic from the beginning
   * Build the Consumer with this command:
   
     `sbt consumer/package`
-#   see note at bottom if errors here
+
+   see note at bottom if errors here
 
 ### Addition step if running on standalone spark
 Must add the spark cassandra connector to the spark project 
+
 git clone https://github.com/datastax/spark-cassandra-connector
+ 
 cd spark-cassandra-connector
+
 sbt -Dscala-2.11=true assembly
+
 copy the resulting jar file to a known location 
+ 
 reference the jar file in the ./runConsumer2.sh script
 
-#  if want to use a fat jar file because can't resolve dependencies in spark-submit maybe because of no internet connection.  This will build a much larger jar file
+ if want to use a fat jar file because can't resolve dependencies in spark-submit maybe because of no internet connection.  This will build a much larger jar file
 
 `sbt -Dscala-2.11=true consumer/assembly`
 
