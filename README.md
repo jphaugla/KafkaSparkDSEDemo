@@ -33,26 +33,26 @@ Once downloaded you will need to extract the file. It will create a folder/direc
 
 #### (on mac)
 
-	`brew install kafka`
-	`pip install kafka-python`
+	brew install kafka
+	pip install kafka-python
 
 #### (on ubuntu)
 
-	`sudo apt-get install zookeeperd`
-	`wget http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-0.10.2.0.tgz`
-	`sudo mkdir /opt/Kafka`
-	`cd /opt/Kafka`
-	`sudo tar -xvf ~datastax/kafka_2.11-0.10.2.0.tgz -C /opt/Kafka`
+	sudo apt-get install zookeeperd
+	wget http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-0.10.2.0.tgz
+	sudo mkdir /opt/Kafka
+	cd /opt/Kafka
+	sudo tar -xvf ~datastax/kafka_2.11-0.10.2.0.tgz -C /opt/Kafka
 
 for convenience, created a soft link to /opt/Kafka/kafka 
 
-	`cd /opt/Kafka`
-	`ln -s kafka_2.11-0.10.2.0 kafka`
+	cd /opt/Kafka
+	ln -s kafka_2.11-0.10.2.0 kafka
 
-# for kafka and python on ubuntu 
+#### for kafka and python on ubuntu 
 
-	`sudo apt-get install python-pip python-dev build-essential`
-	`sudo pip install kafka-python`
+	sudo apt-get install python-pip python-dev build-essential
+	sudo pip install kafka-python
 
 ### Start ZooKeeper and Kafka
 Start local copy of zookeeper
@@ -65,8 +65,8 @@ or
 
 ####  on Ubuntu
 
-	`add kafka bin to the PATH`
-	`sudo /opt/Kafka/kafka/bin/kafka-server-start.sh /opt/Kafka/kafka/config/server.properties`
+	add kafka bin to the PATH
+	sudo /opt/Kafka/kafka/bin/kafka-server-start.sh /opt/Kafka/kafka/config/server.properties
 
 (zookeeper automatically starts on install)
 
@@ -198,5 +198,5 @@ This assumes you already have Kafka and DSE up and running and configured as in 
 ####  PROBLEMS with build.sbt
 Needed to clean out jar files on spark and dse dependencies
 
-	`rm -rf ~/.ivy2/cache/org.apache.spark/*`
-	`rm -rf ~/.ivy2/cache/com.datastax.dse/*`
+	rm -rf ~/.ivy2/cache/org.apache.spark/*
+	rm -rf ~/.ivy2/cache/com.datastax.dse/*
