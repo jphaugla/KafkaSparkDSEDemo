@@ -9,12 +9,12 @@ The purpose of this demo is to demonstrate a simple Kafka/Spark/Scala IOT stream
 In order to run this demo, It is assumed that you have the following installed and available on your local system.
 
   1. Datastax Enterprise 5.0
-  2. Apache Kafka 0.10.1.1, Scala 2.11 build
+  2. Apache Kafka 0.10.1.1, Scala 2.10 build
   3. git
   4. sbt
 
 ##Getting Started with Kafka
-Use the steps below to setup up a local instance of Kafka for this example. This is based off of kafka_2.11-0.10.2.0.tgz
+Use the steps below to setup up a local instance of Kafka for this example. This is based off of kafka_2.10-0.10.2.0.tgz
 
 
 Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/ 
@@ -24,10 +24,25 @@ Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-con
 Kafka can be located at this URL: 
 	[http://kafka.apache.org/downloads.html](http://kafka.apache.org/downloads.html)
 
-download and install the binary version for Scala 2.11.
+download and install the binary version for Scala 2.10.
 
+###  install sbt
 
-### Install Apache Kafka
+#### on ubuntu 
+
+	echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+	sudo apt-get update
+	sudo apt-get install sbt
+
+#### on mac 
+	brew install sbt
+
+### Download and install Datastax Enterprise v5.x
+
+  * `https://academy.datastax.com/downloads/welcome`
+
+### Install Apache Kafka and Zookeeper
 
 Once downloaded you will need to extract the file. It will create a folder/directory. Move this to a location of your choice.
 
@@ -39,15 +54,15 @@ Once downloaded you will need to extract the file. It will create a folder/direc
 #### (on ubuntu)
 
 	sudo apt-get install zookeeperd
-	wget http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-0.10.2.0.tgz
+	wget http://apache.claz.org/kafka/0.10.2.0/kafka_2.10-0.10.2.0.tgz
 	sudo mkdir /opt/Kafka
 	cd /opt/Kafka
-	sudo tar -xvf ~datastax/kafka_2.11-0.10.2.0.tgz -C /opt/Kafka
+	sudo tar -xvf ~datastax/kafka_2.10-0.10.2.0.tgz -C /opt/Kafka
 
 for convenience, created a soft link to /opt/Kafka/kafka 
 
 	cd /opt/Kafka
-	ln -s kafka_2.11-0.10.2.0 kafka
+	ln -s kafka_2.10-0.10.2.0 kafka
 
 #### for kafka and python on ubuntu 
 
@@ -55,7 +70,7 @@ for convenience, created a soft link to /opt/Kafka/kafka
 	sudo pip install kafka-python
 
 ### Start ZooKeeper and Kafka
-Start local copy of zookeeper
+Start local copy of zookeeper and Kafka
 
 ####  on Mac
   * `<kafka home dir>bin/zookeeper-server-start config/zookeeper.properties`
@@ -65,7 +80,8 @@ or
 
 ####  on Ubuntu
 
-	add kafka bin to the PATH
+	add kafka bin to the PATH in your profile
+           echo "export PATH=/opt/Kafka/kafka/bin:$PATH" >> ~/.bashrc
 	sudo /opt/Kafka/kafka/bin/kafka-server-start.sh /opt/Kafka/kafka/config/server.properties
 
 (zookeeper automatically starts on install)
@@ -76,30 +92,27 @@ moving forward, manage zookeeper on ubuntu with "service zookeeper status"
 
 Create the topic we will use for the demo
 
-###  on ubuntu, command is kafka-topics.sh (sh suffix needed)
-  * `kafka-topics --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic stream_ts`
-  * `kafka-topics --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic full_summary`
+###  on mac, command is kafka-topics (sh suffix not needed)
+  * `kafka-topics.sh --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic stream_ts`
+  * `kafka-topics.sh --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic full_summary`
 
 Validate the topic was created. 
 
-  * `kafka-topics --zookeeper localhost:2181 --list`
+  * `kafka-topics.sh --zookeeper localhost:2181 --list`
   
 ### A Couple of other useful Kafka commands
 ####  on ubuntu, commands need sh suffix 
 
 Delete the topic. (Note: The server.properties file must contain `delete.topic.enable=true` for this to work)
 
-  * `kafka-topics --zookeeper localhost:2181 --delete --topic stream_ts`
+  * `kafka-topics.sh --zookeeper localhost:2181 --delete --topic stream_ts`
   
 Show all of the messages in a topic from the beginning
 
-  * `kafka-console-consumer --zookeeper localhost:2181 --topic stream_ts --from-beginning`
+  * `kafka-console-consumer.sh --zookeeper localhost:2181 --topic stream_ts --from-beginning`
   
 #Getting Started with Local DSE/Cassandra
 
-### Download and install Datastax Enterprise v5.x
-
-  * `https://academy.datastax.com/downloads/welcome`
 
 ### Starting DSE tarball install on the local OSX or Linux machine (-s starts search, -k starts Spark)
     search could be easily incorporated to this demo using the sensor_full_summary table
@@ -113,7 +126,6 @@ Show all of the messages in a topic from the beginning
   * Navigate to the directory where you would like to save the code.
   * Execute the following command:
   
-  
        `git clone git@github.com:jphaugla/KafkaSparkDSEDemo.git`
   
   * Create cql tables
@@ -124,17 +136,6 @@ Show all of the messages in a topic from the beginning
   * load the sensor meta data
    
     `cqlsh -f consumer/resources/cql/loaddata.cql`
-
-###  need to have sbt installed
-#### on ubuntu 
-
-	echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-	sudo apt-get update
-	sudo apt-get install sbt
-
-#### on mac 
-	brew install sbt
 
 ###To build the demo
 
@@ -158,7 +159,7 @@ Must add the spark cassandra connector to the spark project
 git clone https://github.com/datastax/spark-cassandra-connector
  
 	cd spark-cassandra-connector
-	sbt -Dscala-2.11=true assembly
+	sbt -Dscala-2.10=true assembly
 
 copy the resulting jar file to a known location 
  
@@ -166,7 +167,7 @@ reference the jar file in the ./runConsumer2.sh script
 
 if want to use a fat jar file because can't resolve dependencies in spark-submit maybe because of no internet connection.  This will build a much larger jar file
 
-	sbt -Dscala-2.11=true consumer/assembly
+	sbt -Dscala-2.10=true consumer/assembly
 
 ###To run the demo
 
