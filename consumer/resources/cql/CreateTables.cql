@@ -8,7 +8,7 @@ CREATE TABLE if not exists demo.sensor_detail (
 	depth double,
 	value double,
 	PRIMARY KEY (( serial_number, ts10min ), ts)
-) WITH default_time_to_live = 180;
+); 
 
 CREATE TABLE if not exists demo.last (
 	edge_id text,
