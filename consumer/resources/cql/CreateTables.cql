@@ -17,7 +17,7 @@ CREATE TABLE if not exists demo.last (
         depth double,
 	value double,
 	PRIMARY KEY (( serial_number ))
-) WITH default_time_to_live = 180;
+);
 
 CREATE TABLE if not exists demo.count (
 	pk int,
@@ -25,7 +25,7 @@ CREATE TABLE if not exists demo.count (
 	count bigint,
 	count_ma double,
 	PRIMARY KEY (pk, ts)
-) WITH default_time_to_live = 180;
+);
 
 CREATE TABLE IF NOT EXISTS demo.sensor_meta
 ( serial_number text,
