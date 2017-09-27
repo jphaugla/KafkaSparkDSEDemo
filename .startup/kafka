@@ -3,16 +3,14 @@
 echo "install kafka"
 #standup the docs
 #install kafka
-sudo mkdir /opt
-sudo mkdir /opt/kafka
+sudo mkdir -p /opt/kafka
+sudo chown ds_user:ds_user /opt/kafka
 wget -P /tmp/ http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-0.10.2.0.tgz
-sudo tar -xvf /tmp/kafka_2.11-0.10.2.0.tgz -C /opt/kafka
-
-git submodule update --init
-git submodule sync
+cd /opt/kafka
+tar -xzvf /tmp/kafka_2.11-0.10.2.0.tgz 
 
 echo "start kafka"
-nohup /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties &
-
+nohup /opt/kafka/kafka_2.11-0.10.2.0/bin/kafka-server-start.sh /opt/kafka/kafka_2.11-0.10.2.0/config/server.properties &
+sleep 10
 echo "create kafka topic"
-/opt/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic stream_ts
+/opt/kafka/kafka_2.11-0.10.2.0/bin/kafka-topics.sh --zookeeper localhost:2181 --create --replication-factor 1 --partitions 1 --topic stream_ts
