@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo 'Checking for dsefs'
+#check for dsefs
+PORT_CHECK=$(lsof -i:5598|grep LISTEN|wc -l)
+if [ "$PORT_CHECK" -eq 0 ]; then
+  echo "dsefs needs to be running";
+  exit 1;
+fi
+

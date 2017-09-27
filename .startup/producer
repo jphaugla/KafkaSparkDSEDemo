@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "build producer"
+sbt producer/package
+if [ `hostname` = "node0" ]; then
+   nohup sbt producer/run & 
+fi

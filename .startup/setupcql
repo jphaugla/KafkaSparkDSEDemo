@@ -1,0 +1,8 @@
+#!/bin/sh
+
+
+echo "Waiting for DSE to settle"
+sleep 240
+
+cqlsh localhost -f consumer/resources/cql/CreateTables.cql
+cqlsh localhost -f consumer/resources/cql/loaddata.cql
