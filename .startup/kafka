@@ -3,10 +3,10 @@
 echo "install kafka"
 #standup the docs
 #install kafka
-mkdir /opt
-mkdir /opt/kafka
+sudo mkdir /opt
+sudo mkdir /opt/kafka
 wget -P /tmp/ http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-0.10.2.0.tgz
-tar -xvf /tmp/kafka_2.11-0.10.2.0.tgz -C /opt/kafka
+sudo tar -xvf /tmp/kafka_2.11-0.10.2.0.tgz -C /opt/kafka
 
 git submodule update --init
 git submodule sync

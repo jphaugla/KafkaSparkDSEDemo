@@ -4,5 +4,4 @@ echo "install zookeeper"
 #standup the docs
 #install zookeeper
 #  zookeeper will automatically start
- sudo apt-get -y install zookeeperd 
-
+sudo apt-get -y install zookeeperd 
