@@ -8,7 +8,9 @@ sudo chown ds_user:ds_user /opt/kafka
 wget -P /tmp/ http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-0.10.2.0.tgz
 cd /opt/kafka
 tar -xzvf /tmp/kafka_2.11-0.10.2.0.tgz 
-
+echo "start zookeeper"
+nohup /opt/kafka/kafka_2.11-0.10.2.0/bin/zookeeper-server-start.sh /opt/kafka/kafka_2.11-0.10.2.0/config/zookeeper.properties &
+sleep 5
 echo "start kafka"
 nohup /opt/kafka/kafka_2.11-0.10.2.0/bin/kafka-server-start.sh /opt/kafka/kafka_2.11-0.10.2.0/config/server.properties &
 sleep 10

@@ -1,6 +1,5 @@
 sbt
 dsefs
-zookeeper
 kafka
 dseconfig
 restartdse
