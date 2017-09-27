@@ -1,4 +1,4 @@
-CREATE KEYSPACE if not exists demo WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'dc0' : 2 };
+CREATE KEYSPACE if not exists demo WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
 CREATE TABLE if not exists demo.sensor_detail (
 	edge_id text,
