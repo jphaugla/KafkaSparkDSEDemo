@@ -1,0 +1,12 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/jasonhaugland/datastax/KafkaSparkDSEDemo/consumer/src/main/scala/SparkKafkaConsumer.scala:141:17: ambiguous reference to overloaded definition,[0m
+[0m[[0m[31merror[0m] [0m[0mboth method window in object functions of type (timeColumn: org.apache.spark.sql.Column, windowDuration: String)org.apache.spark.sql.Column[0m
+[0m[[0m[31merror[0m] [0m[0mand  method window in object functions of type (timeColumn: org.apache.spark.sql.Column, windowDuration: String, slideDuration: String)org.apache.spark.sql.Column[0m
+[0m[[0m[31merror[0m] [0m[0mmatch expected type ?[0m
+[0m[[0m[31merror[0m] [0m[0m 			date_format(window.start, "yyyyMMddhhmm"),[0m
+[0m[[0m[31merror[0m] [0m[0m 			            ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/jasonhaugland/datastax/KafkaSparkDSEDemo/consumer/src/main/scala/SparkKafkaConsumer.scala:141:16: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : org.apache.spark.sql.Column[0m
+[0m[[0m[31merror[0m] [0m[0m required: String[0m
+[0m[[0m[31merror[0m] [0m[0m 			date_format(window.start, "yyyyMMddhhmm"),[0m
+[0m[[0m[31merror[0m] [0m[0m 			           ^[0m
+[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m

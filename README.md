@@ -1,5 +1,6 @@
 # KafkaSparkDSEDemo
-  Updated for DSE 5.1 which used Spark 2.0.2
+  Updated for DSE 6.x with Spark 2.1.2 and structured streaming
+  Updated for DSE 6.x which used Spark 2.0.2
   Also updated for standalone Spark 2.0.2
   Added python version of code base in consumer/src/main/python
   Added fat jar option using sbt-assembly
@@ -8,13 +9,13 @@ The purpose of this demo is to demonstrate a simple Kafka/Spark/Scala IOT stream
 
 In order to run this demo, It is assumed that you have the following installed and available on your local system.
 
-  1. Datastax Enterprise 5.1
-  2. Apache Kafka 0.10.1.1, Scala 2.11 build
+  1. Datastax Enterprise 6.x
+  2. Apache Kafka 1.1.0, Scala 2.11 build
   3. git
   4. sbt
 
 ##Getting Started with Kafka
-Use the steps below to setup up a local instance of Kafka for this example. This is based off of kafka_2.11-0.10.2.0.tgz
+Use the steps below to setup up a local instance of Kafka for this example. This is based off of kafka_2.11-1.1.0.tgz
 
 
 Ubuntu helpful tips at https://devops.profitbricks.com/tutorials/install-and-configure-apache-kafka-on-ubuntu-1604-1/ 
@@ -38,7 +39,7 @@ download and install the binary version for Scala 2.11.
 #### on mac 
 	brew install sbt
 
-### Download and install Datastax Enterprise v5.1.x
+### Download and install Datastax Enterprise v6.x.x
 
   * `https://academy.datastax.com/downloads/welcome`
 
@@ -51,18 +52,25 @@ Once downloaded you will need to extract the file. It will create a folder/direc
 	brew install kafka
 	pip install kafka-python
 
+verify the correct kafka in path from brew
+        `which kafka-topics` should return "/usr/local/bin/kafka-topics"
+
+double check the link is correct in /usr/local/bin for desired version
+
+        `ls -lrt /usr/local/bin/kafka-topics` should point to "../Cellar/kafka/1.1.0/bin/kafka-topics"
+
 #### (on ubuntu)
 
 	sudo apt-get install zookeeperd
-	wget http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-0.10.2.0.tgz
+	wget http://apache.claz.org/kafka/0.10.2.0/kafka_2.11-1.1.0.tgz
 	sudo mkdir /opt/Kafka
 	cd /opt/Kafka
-	sudo tar -xvf ~datastax/kafka_2.11-0.10.2.0.tgz -C /opt/Kafka
+	sudo tar -xvf ~datastax/kafka_2.11-1.1.0.tgz -C /opt/Kafka
 
 for convenience, created a soft link to /opt/Kafka/kafka 
 
 	cd /opt/Kafka
-	ln -s kafka_2.11-0.10.2.0 kafka
+	ln -s kafka_2.11-1.1.0 kafka
 
 #### for kafka and python on ubuntu 
 
@@ -73,9 +81,9 @@ for convenience, created a soft link to /opt/Kafka/kafka
 Start local copy of zookeeper and Kafka
 
 ####  on Mac
-  * `<kafka home dir>bin/zookeeper-server-start config/zookeeper.properties`
-or 
+this starts zookeeper
   * zkServer start
+ithis starts kafka
   * `kafka-server-start  /usr/local/etc/kafka/server.properties`
 
 ####  on Ubuntu
@@ -153,22 +161,6 @@ Show all of the messages in a topic from the beginning
 
    see note at bottom if errors here
 
-### Addition step if running on standalone spark
-Must add the spark cassandra connector to the spark project 
-
-git clone https://github.com/datastax/spark-cassandra-connector
- 
-	cd spark-cassandra-connector
-	sbt -Dscala-2.11=true assembly
-
-copy the resulting jar file to a known location 
- 
-reference the jar file in the ./runConsumer2.sh script
-
-if want to use a fat jar file because can't resolve dependencies in spark-submit maybe because of no internet connection.  This will build a much larger jar file
-
-	sbt -Dscala-2.11=true consumer/assembly
-
 ###To run the demo
 
 This assumes you already have Kafka and DSE up and running and configured as in the steps above.
@@ -180,21 +172,15 @@ This assumes you already have Kafka and DSE up and running and configured as in 
   
   * From the root directory of the project start the consumer app
 
-	`./runConsumer.sh   (if using DSE embedded 5.0.x)`
-	`./runConsumer2.sh  (if using standalone spark 2.0.2)`
-	`./runConsumer2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
+	`./runConsumer.sh   
 
   * After running for some time can run aggregate to create sensor_full_summary
 
-	`./runAggregate.sh   (if using DSE embedded 5.0.x)`
-	`./runAggregate2.sh  (if using standalone spark 2.0.2)`
-	`./runAggregate2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
+	`./runAggregate.sh   
 
   * Can write sensor_full_summary back to a full_summary kafka topic
 
-	`./runWriteBack.sh   (if using DSE embedded 5.0.x)`
-	`./runWriteBack2.sh  (if using standalone spark 2.0.2)`
-	`./runWriteBack2.full.sh  (if using standalone spark 2.0.2 with fat jar)`
+	`./runWriteBack.sh  
   
 ####  PROBLEMS with build.sbt
 Needed to clean out jar files on spark and dse dependencies

@@ -1,0 +1,1 @@
+["SensorAggregates","WriteBackKafka","com.datastax.demo.SparkKafkaConsumer"]

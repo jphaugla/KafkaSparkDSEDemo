@@ -1,0 +1,1 @@
+sudo -H -u ds_user bash -c 'nohup sbt producer/run > ~/producerRun.log &'

@@ -1,0 +1,1 @@
+sudo -H -u ds_user bash -c 'sbt consumer/package'

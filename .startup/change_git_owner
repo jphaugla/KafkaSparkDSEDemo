@@ -1,0 +1,3 @@
+#change github owner to login owner
+
+chown -R ds_user:ds_user /tmp/datastax-bank-techday
