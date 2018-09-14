@@ -7,6 +7,7 @@ package_producer
 package_consumer
 hugo
 create_tables
+load_meta
 run_consumer
 run_producer
 workbooks
