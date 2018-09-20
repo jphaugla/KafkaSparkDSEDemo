@@ -1,2 +1,2 @@
 echo 'Building schema'
-sudo -H -u ds_user bash -c 'mvn clean compile exec:java -Dexec.mainClass="com.datastax.demo.SchemaSetup" -DcontactPoints=node0'
+cqlsh node0 -f consumer/resources/cql/CreateTables.cql

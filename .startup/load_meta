@@ -1,1 +1,1 @@
-cqlsh -f consumer/resources/cql/loaddata.cql
+cqlsh node0 -f consumer/resources/cql/loaddata.cql
