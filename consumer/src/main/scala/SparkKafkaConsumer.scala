@@ -191,19 +191,11 @@ class SparkJob extends Serializable {
 */
     println (s"after write to sensor_summary")
 
-<<<<<<< HEAD
 /*   better might be awaitAnyTermination
     win_query.awaitTermination()
     det_query.awaitTermination()
 */    
     sparkSession.streams.awaitAnyTermination()
-=======
-    win_query.awaitTermination()
-    det_query.awaitTermination()
-/*   better might be awaitAnyTermination
-    sparkSession.streams.awaitAnyTermination()
-*/    
->>>>>>> b3417d344bdd5f15124362395b4256f0dc3dd7e8
     println(s"after awaitTermination ")
     sparkSession.stop()
   }
