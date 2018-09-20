@@ -73,6 +73,7 @@ class SparkJob extends Serializable {
   println(s"after build spark session")
 
   def runJob() = {
+  val sensorMinuteFormat = new SimpleDateFormat("YYYYMMddHHmm")
 
   val sens_meta_df = sparkSession
      .read
@@ -105,15 +106,16 @@ class SparkJob extends Serializable {
     println(s"finished reading transaction kafka stream ")
     sensDetailDS.printSchema()
 
-    val sensDetailCols =  List("edge_id","serial_number","depth","value","ts")
+    val sensDetailCols =  List("edge_id","serial_number","depth","value","ts","ts10min")
 
     val sens_df =
         sensDetailDS.map { line =>
         val payload = line._1.split(";")
+        val currentMinute = sensorMinuteFormat.format(line._2)
         (payload(0), payload(1),             
 	 payload(4), 
 	 payload(5).toDouble,
-	 line._2
+	 line._2, currentMinute
          )
       }.toDF(sensDetailCols: _*)
     println(s"after sens_df ")
@@ -138,20 +140,21 @@ class SparkJob extends Serializable {
     windowedCount.printSchema()
     
     val clean_df = windowedCount.selectExpr ( "serial_number", 
- 			"Cast(date_format(window.start, 'yyyyMMddhhmm') as string) as ts10min",
-			"Cast(max_depth as double) as max_depth",
-			"Cast(min_depth as double) as min_depth",
-			"Cast(avg_depth as double) as avg_depth",
-			"Cast(sum_depth as double) as sum_depth",
-			"Cast(mean_depth as double) as mean_depth",
-			"Cast(stddev_depth as double) as stddev_depth",
-			"Cast(max_value as double) as max_value",
-			"Cast(min_value as double) as min_value",
-			"Cast(avg_value as double) as avg_value",
-			"Cast(sum_value as double) as sum_value",
-			"Cast(mean_value as double) as mean_value",
-			"Cast(stddev_value as double) as stddev_value",
-			"Cast(row_count as int) as row_count")
+ 	"Cast(date_format(window.start, 'yyyyMMddhhmm') as string) as ts10min",
+	"Cast(max_depth as double) as max_depth",
+	"Cast(min_depth as double) as min_depth",
+	"Cast(avg_depth as double) as avg_depth",
+	"Cast(sum_depth as double) as sum_depth",
+	"Cast(mean_depth as double) as mean_depth",
+	"Cast(stddev_depth as double) as stddev_depth",
+	"Cast(max_value as double) as max_value",
+	"Cast(min_value as double) as min_value",
+	"Cast(avg_value as double) as avg_value",
+	"Cast(sum_value as double) as sum_value",
+	"Cast(mean_value as double) as mean_value",
+	"Cast(stddev_value as double) as stddev_value",
+	"Cast(row_count as int) as row_count")
+
     println(s"after clean_df ")
     clean_df.printSchema()
  
@@ -163,7 +166,16 @@ class SparkJob extends Serializable {
     joined_df.printSchema()
 */
   
-    val query = clean_df.writeStream
+    val det_query = sens_df.writeStream
+      .format("org.apache.spark.sql.cassandra")
+      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/")
+      .option("keyspace", "demo")
+      .option("table", "sensor_detail")
+      .outputMode(OutputMode.Update)
+      .start()
+    println (s"after write to sensor_detail")
+
+    val win_query = clean_df.writeStream
       .format("org.apache.spark.sql.cassandra")
       .option("checkpointLocation", "dsefs://node0:5598/checkpoint/")
       .option("keyspace", "demo")
@@ -172,14 +184,18 @@ class SparkJob extends Serializable {
       .start()
 
 /*   test write to console
-     val query = joined_df.writeStream
+     val win_query = joined_df.writeStream
       .outputMode(OutputMode.Complete)
       .queryName("table")
       .start()
 */
-    println (s"after write to sensor_full_summary")
+    println (s"after write to sensor_summary")
 
-    query.awaitTermination()
+    win_query.awaitTermination()
+    det_query.awaitTermination()
+/*   better might be awaitAnyTermination
+    sparkSession.streams.awaitAnyTermination()
+*/    
     println(s"after awaitTermination ")
     sparkSession.stop()
   }
