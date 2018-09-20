@@ -154,8 +154,12 @@ class SparkJob extends Serializable {
 			"Cast(row_count as int) as row_count")
     println(s"after clean_df ")
     clean_df.printSchema()
+ 
+    val joined_df = clean_df.join(sens_meta_df, Seq("serial_number"))
+    println(s"after joined_df ")
+    joined_df.printSchema()
   
-    val query = clean_df.writeStream
+    val query = joined_df.writeStream
       .format("org.apache.spark.sql.cassandra")
       .option("checkpointLocation", "dsefs://node0:5598/checkpoint/")
       .option("keyspace", "demo")
