@@ -155,15 +155,19 @@ class SparkJob extends Serializable {
     println(s"after clean_df ")
     clean_df.printSchema()
  
+/*
+    --   decided not to join this here as it makes very wide table
+    --    can join in analtyic query later
     val joined_df = clean_df.join(sens_meta_df, Seq("serial_number"))
     println(s"after joined_df ")
     joined_df.printSchema()
+*/
   
-    val query = joined_df.writeStream
+    val query = clean_df.writeStream
       .format("org.apache.spark.sql.cassandra")
       .option("checkpointLocation", "dsefs://node0:5598/checkpoint/")
       .option("keyspace", "demo")
-      .option("table", "sensor_full_summary")
+      .option("table", "sensor_summary")
       .outputMode(OutputMode.Update)
       .start()
 

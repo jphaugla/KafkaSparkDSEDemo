@@ -53,6 +53,12 @@ CREATE TABLE IF NOT EXISTS demo.sensor_summary
   min_value double,
   sum_depth double,
   sum_value double,
+  avg_depth double,
+  avg_value double,
+  mean_depth double,
+  mean_value double,
+  stddev_depth double,
+  stddev_value double,
   row_count   int,
   PRIMARY KEY ((serial_number),ts10min))
 WITH CLUSTERING ORDER BY (ts10min DESC)
