@@ -112,8 +112,8 @@ class SparkJob extends Serializable {
         sensDetailDS.map { line =>
         val payload = line._1.split(";")
         val currentMinute = sensorMinuteFormat.format(line._2)
-        (payload(0), payload(1).toDouble,             
-	 payload(4), 
+        (payload(0), payload(1),             
+	 payload(4).toDouble,
 	 payload(5).toDouble,
 	 line._2, currentMinute
          )
