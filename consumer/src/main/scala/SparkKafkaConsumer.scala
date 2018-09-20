@@ -112,7 +112,7 @@ class SparkJob extends Serializable {
         sensDetailDS.map { line =>
         val payload = line._1.split(";")
         val currentMinute = sensorMinuteFormat.format(line._2)
-        (payload(0), payload(1),             
+        (payload(0), payload(1).toDouble,             
 	 payload(4), 
 	 payload(5).toDouble,
 	 line._2, currentMinute
@@ -191,11 +191,11 @@ class SparkJob extends Serializable {
 */
     println (s"after write to sensor_summary")
 
+/*   better might be awaitAnyTermination
     win_query.awaitTermination()
     det_query.awaitTermination()
-/*   better might be awaitAnyTermination
-    sparkSession.streams.awaitAnyTermination()
 */    
+    sparkSession.streams.awaitAnyTermination()
     println(s"after awaitTermination ")
     sparkSession.stop()
   }
