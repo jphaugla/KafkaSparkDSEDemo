@@ -13,6 +13,7 @@ CREATE TABLE if not exists demo.sensor_detail (
 CREATE TABLE if not exists demo.last (
 	edge_id text,
 	serial_number text,
+	ts10min text,
 	ts timestamp,
         depth double,
 	value double,

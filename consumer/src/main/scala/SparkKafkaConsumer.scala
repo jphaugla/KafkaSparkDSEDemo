@@ -62,6 +62,8 @@ object SparkKafkaConsumer {
 class SparkJob extends Serializable {
 
   println(s"before build spark session")
+
+  def runJob() = {
   val appName = "SparkKafkaConsumer"
 
   val sparkSession =
@@ -71,19 +73,7 @@ class SparkJob extends Serializable {
       .getOrCreate()
 
   println(s"after build spark session")
-
-  def runJob() = {
   val sensorMinuteFormat = new SimpleDateFormat("YYYYMMddHHmm")
-
-  val sens_meta_df = sparkSession
-     .read
-     .format("org.apache.spark.sql.cassandra")
-     .options(Map( "table" -> "sensor_meta", "keyspace" -> "demo"))
-     .load()
-
-  
-  println(s"after reading sens_meta_df")
-  sens_meta_df.printSchema()
 
 
   println(s"before reading kafka stream after runJob")
@@ -120,11 +110,7 @@ class SparkJob extends Serializable {
       }.toDF(sensDetailCols: _*)
     println(s"after sens_df ")
     sens_df.printSchema()
-/*
-    val ts = Timestamp.valueOf(payload(3))
-    val sensorMinuteFormat = new SimpleDateFormat("YYYYMMddHHmm")
-    val currentMinute = sensorMinuteFormat.format(ts).dropRight(1)
-*/
+
     val windowedCount = sens_df
       .groupBy( $"serial_number",window($"ts", "30 seconds"))
       .agg(
@@ -160,7 +146,7 @@ class SparkJob extends Serializable {
  
 /*
     --   decided not to join this here as it makes very wide table
-    --    can join in analtyic query later
+    --    can join in analtyic query later but it works  :)
     val joined_df = clean_df.join(sens_meta_df, Seq("serial_number"))
     println(s"after joined_df ")
     joined_df.printSchema()
@@ -168,34 +154,34 @@ class SparkJob extends Serializable {
   
     val det_query = sens_df.writeStream
       .format("org.apache.spark.sql.cassandra")
-      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/")
+      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/detail/")
       .option("keyspace", "demo")
       .option("table", "sensor_detail")
       .outputMode(OutputMode.Update)
       .start()
     println (s"after write to sensor_detail")
 
+    val det2_query = sens_df.writeStream
+      .format("org.apache.spark.sql.cassandra")
+      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/detail2/")
+      .option("keyspace", "demo")
+      .option("table", "last")
+      .outputMode(OutputMode.Update)
+      .start()
+
     val win_query = clean_df.writeStream
       .format("org.apache.spark.sql.cassandra")
-      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/")
+      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/summary/")
       .option("keyspace", "demo")
       .option("table", "sensor_summary")
       .outputMode(OutputMode.Update)
       .start()
 
-/*   test write to console
-     val win_query = joined_df.writeStream
-      .outputMode(OutputMode.Complete)
-      .queryName("table")
-      .start()
-*/
-    println (s"after write to sensor_summary")
-
     win_query.awaitTermination()
     det_query.awaitTermination()
-/*   better might be awaitAnyTermination
-    sparkSession.streams.awaitAnyTermination()
-*/    
+    det2_query.awaitTermination()
+//     better might be awaitAnyTermination
+//    sparkSession.streams.awaitAnyTermination()
     println(s"after awaitTermination ")
     sparkSession.stop()
   }
