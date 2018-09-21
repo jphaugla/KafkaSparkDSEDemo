@@ -1,0 +1,46 @@
+languageCode = "en-us"
+title = "Fraud Structured Streaming Proofshop"
+theme = "hugo-material-docs"
+metadataformat = "yaml"
+canonifyurls = true
+baseUrl = "/"
+
+disableKinds = ["taxonomy","taxonomyTerm"]
+
+[params]
+	description = "DSE Analytics Fraud Structured Streaming Proofshop"
+
+	logo = "images/asset-hub.svg"
+	favicon = "/images/asset-hub.png"
+
+[params.palette]
+    primary = "grey"
+    accent  = "teal"
+
+[params.font]
+    text = "Roboto"
+    code = "Roboto Mono"
+
+[social]
+        github  = "jphaugla/datastax-bank-techday"
+
+[blackfriday]
+	smartypants	= true
+	fractions = true
+	smartDashes = true
+	plainIDAnchors = true
+
+
+[[menu.main]]
+	name = "DSE Analytics Fraud Structured Streaming"
+	url    = "/"
+	weight = 10
+[[menu.main]]
+    name   = "Presales Interactions"
+        weight = 20
+[[menu.main]]
+    name   = "Setup Instructions"
+    weight = 30
+[[menu.main]]
+    name   = "Workshop Delivery"
+    weight = 40

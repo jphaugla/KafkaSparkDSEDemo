@@ -10,4 +10,3 @@ create_tables
 load_meta
 run_consumer
 run_producer
-workbooks
