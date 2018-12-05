@@ -8,7 +8,11 @@ CREATE TABLE if not exists demo.sensor_detail (
 	depth double,
 	value double,
 	PRIMARY KEY (( serial_number, ts10min ), ts)
-); 
+) with clustering order by (ts DESC)
+  and default_time_to_live = 604800
+  and compaction = {'compaction_window_size': '1', 
+    				  'compaction_window_unit': 'DAY', 
+    				  'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy'};
 
 CREATE TABLE if not exists demo.last (
 	edge_id text,
@@ -45,6 +49,7 @@ CREATE TABLE IF NOT EXISTS demo.sensor_meta
   PRIMARY KEY (serial_number)
 )
 ;
+
 CREATE TABLE IF NOT EXISTS demo.sensor_summary
 ( serial_number text,
   ts10min text,
@@ -63,6 +68,9 @@ CREATE TABLE IF NOT EXISTS demo.sensor_summary
   row_count   int,
   PRIMARY KEY ((serial_number),ts10min))
 WITH CLUSTERING ORDER BY (ts10min DESC)
+  and compaction = {'compaction_window_size': '1', 
+    				  'compaction_window_unit': 'DAY', 
+    				  'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy'}
 ;
 
 CREATE TABLE IF NOT EXISTS demo.sensor_full_summary
@@ -94,7 +102,8 @@ CREATE TABLE IF NOT EXISTS demo.sensor_full_summary
   wing       text,
   lat_long   text,
   PRIMARY KEY ((serial_number),ts10min))
-WITH CLUSTERING ORDER BY (ts10min DESC);
+WITH CLUSTERING ORDER BY (ts10min DESC)
+;
 
 CREATE TABLE IF NOT EXISTS demo.dup_full_summary
 ( serial_number text,
