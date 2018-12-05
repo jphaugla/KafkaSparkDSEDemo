@@ -103,7 +103,9 @@ object KafkaStreamProducer extends App {
    * Message Loop
    */
   var numRecsWritten = 0
-  while(numRecsWritten < numRecords) {
+  // while(numRecsWritten < numRecords) 
+ while(true)
+ {
     messageActor ! "send"
 
     numRecsWritten += numSensors
