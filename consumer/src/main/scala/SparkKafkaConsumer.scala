@@ -120,7 +120,7 @@ class SparkJob extends Serializable {
 	   max($"value").alias("max_value"),min($"value").alias("min_value"),
            mean("value").alias("mean_value"),stddev("value").alias("stddev_value"),
   	   avg($"value").alias("avg_value"), sum($"value").alias("sum_value"),
-	   count(lit(1)).alias("row_count")
+	   count(lit(2)).alias("row_count")
           )
     println(s"after window ")
     windowedCount.printSchema()
