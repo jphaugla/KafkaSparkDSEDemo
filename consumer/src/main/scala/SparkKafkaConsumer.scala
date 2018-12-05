@@ -112,7 +112,7 @@ class SparkJob extends Serializable {
     sens_df.printSchema()
 
     val windowedCount = sens_df
-      .groupBy( $"serial_number",window($"ts", "30 seconds"))
+      .groupBy( $"serial_number",window($"ts", "1 minute"))
       .agg(
 	   max($"depth").alias("max_depth"),min($"depth").alias("min_depth"),
            mean("depth").alias("mean_depth"),stddev("depth").alias("stddev_depth"),
