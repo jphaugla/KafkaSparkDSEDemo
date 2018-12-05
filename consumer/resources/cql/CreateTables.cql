@@ -11,7 +11,7 @@ CREATE TABLE if not exists demo.sensor_detail (
 ) with clustering order by (ts DESC)
   and default_time_to_live = 604800
   and compaction = {'compaction_window_size': '1', 
-    				  'compaction_window_unit': 'DAY', 
+    				  'compaction_window_unit': 'DAYS', 
     				  'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy'};
 
 CREATE TABLE if not exists demo.last (
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS demo.sensor_summary
   PRIMARY KEY ((serial_number),ts10min))
 WITH CLUSTERING ORDER BY (ts10min DESC)
   and compaction = {'compaction_window_size': '1', 
-    				  'compaction_window_unit': 'DAY', 
+    				  'compaction_window_unit': 'DAYS', 
     				  'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy'}
 ;
 
