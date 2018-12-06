@@ -115,12 +115,12 @@ class SparkJob extends Serializable {
       .groupBy( $"serial_number",window($"ts", "10 minutes"))
       .agg(
 	   max($"depth").alias("max_depth"),min($"depth").alias("min_depth"),
-           mean("depth").alias("mean_depth"),stddev("depth").alias("stddev_depth"),
+           mean($"depth").alias("mean_depth"),stddev($"depth").alias("stddev_depth"),
 	   avg($"depth").alias("avg_depth"), sum($"depth").alias("sum_depth"),
 	   max($"value").alias("max_value"),min($"value").alias("min_value"),
-           mean("value").alias("mean_value"),stddev("value").alias("stddev_value"),
+           mean($"value").alias("mean_value"),stddev($"value").alias("stddev_value"),
   	   avg($"value").alias("avg_value"), sum($"value").alias("sum_value"),
-	   count(lit(2)).alias("row_count")
+	   count(($"ts").alias("row_count")
           )
     println(s"after window ")
     windowedCount.printSchema()
