@@ -1,0 +1,3 @@
+# Enable graph
+sed -ie 's/GRAPH_ENABLED=1/GRAPH_ENABLED=0/g' /etc/default/dse
+sed -ie 's/SOLR_ENABLED=1/SOLR_ENABLED=0/g' /etc/default/dse
