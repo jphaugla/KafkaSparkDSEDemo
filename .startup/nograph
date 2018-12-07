@@ -1,0 +1,2 @@
+# Enable graph
+sed -ie 's/GRAPH_ENABLED=1/GRAPH_ENABLED=0/g' /etc/default/dse

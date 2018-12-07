@@ -1,3 +1,5 @@
+nograph
+othernodes
 mvn
 sbt
 kafka
