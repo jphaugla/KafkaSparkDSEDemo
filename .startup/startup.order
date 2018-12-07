@@ -1,5 +1,7 @@
 nograph
-othernodes
+node1
+node2
+restartdse
 mvn
 sbt
 kafka
