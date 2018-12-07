@@ -1,7 +1,7 @@
 dseconfig
+restartdse
 node1
 node2
-restartdse
 mvn
 sbt
 kafka
