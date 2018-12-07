@@ -1,2 +1,2 @@
-scp -oStrictHostKeyChecking=no -i /home/ds_user/.ssh/id_rsa /etc/dse/default ds_user@node1:/etc/dse
-scp -oStrictHostKeyChecking=no -i /home/ds_user/.ssh/id_rsa /etc/dse/default ds_user@node2:/etc/dse
+scp -oStrictHostKeyChecking=no -i /home/ds_user/.ssh/id_rsa /etc/default/dse ds_user@node1:/etc/default
+scp -oStrictHostKeyChecking=no -i /home/ds_user/.ssh/id_rsa /etc/default/dse ds_user@node2:/etc/default
