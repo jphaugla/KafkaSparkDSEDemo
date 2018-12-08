@@ -110,9 +110,21 @@ class SparkJob extends Serializable {
       }.toDF(sensDetailCols: _*)
     println(s"after sens_df ")
     sens_df.printSchema()
+    sens_df.createOrReplaceTempView("sens_detail")
 
-    val windowedCount = sens_df
-      .groupBy( $"serial_number",window($"ts", "1 minutes"))
+    val sens_det = sparkSession.sql ("""
+          select serial_number
+		,ts10min
+		,ts
+		,depth
+		,value
+          from sens_detail
+         """);
+    println(s"after sql statement ")
+    sens_det.printSchema()
+
+    val windowedCount = sens_det
+      .groupBy( window($"ts", "1 minutes", "1 minutes"),$"serial_number")
       .agg(
 	   max($"depth").alias("max_depth"),min($"depth").alias("min_depth"),
            mean($"depth").alias("mean_depth"),stddev($"depth").alias("stddev_depth"),
@@ -120,11 +132,10 @@ class SparkJob extends Serializable {
 	   max($"value").alias("max_value"),min($"value").alias("min_value"),
            mean($"value").alias("mean_value"),stddev($"value").alias("stddev_value"),
   	   avg($"value").alias("avg_value"), sum($"value").alias("sum_value"),
-	   count($"ts").alias("row_count")
+	   count($"ts").alias("row_count") 
           )
     println(s"after window ")
-    windowedCount.printSchema()
-    
+
     val clean_df = windowedCount.selectExpr ( "serial_number", 
  	"Cast(date_format(window.start, 'yyyyMMddHHmm') as string) as ts10min",
 	"Cast(max_depth as double) as max_depth",
@@ -139,10 +150,12 @@ class SparkJob extends Serializable {
 	"Cast(sum_value as double) as sum_value",
 	"Cast(mean_value as double) as mean_value",
 	"Cast(stddev_value as double) as stddev_value",
-	"Cast(row_count as int) as row_count")
+	"Cast(row_count as int) as row_count"
+	)
 
     println(s"after clean_df ")
     clean_df.printSchema()
+
  
 /*
     --   decided not to join this here as it makes very wide table
@@ -177,7 +190,24 @@ class SparkJob extends Serializable {
       .outputMode(OutputMode.Update)
       .start()
 
+/*
+    val win_query = clean_df.writeStream
+      .format("console")
+      .option("truncate", "true")
+      .outputMode(OutputMode.Update)
+      .start()
+
+    val win_query = clean_df.writeStream
+      .format("csv")
+      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/summaryfile/")
+      .option("path", "dsefs://node0:5598/summaryoutput/")
+      .option("truncate", "true")
+      .outputMode(OutputMode.Append)
+      .start()
+*/
+
     win_query.awaitTermination()
+
     det_query.awaitTermination()
     det2_query.awaitTermination()
 //     better might be awaitAnyTermination
