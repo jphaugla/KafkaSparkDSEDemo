@@ -4,6 +4,7 @@ node1
 node2
 mvn
 sbt
+ntp
 kafka
 change_git_owner
 fix_spark_perms
