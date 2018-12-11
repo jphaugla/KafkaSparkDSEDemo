@@ -95,76 +95,49 @@ class SparkJob extends Serializable {
 
     println(s"finished reading transaction kafka stream ")
     sensDetailDS.printSchema()
-
-    val sensDetailCols =  List("edge_id","serial_number","depth","value","ts","ts10min")
-
-    val sens_df =
-        sensDetailDS.map { line =>
-        val payload = line._1.split(";")
-        val currentMinute = sensorMinuteFormat.format(line._2)
-        (payload(0), payload(1),             
-	 payload(4).toDouble,
-	 payload(5).toDouble,
-	 line._2, currentMinute
-         )
-      }.toDF(sensDetailCols: _*)
-    println(s"after sens_df ")
+    val sens_df = sensDetailDS.withColumn("splitData", split(col("value"),";")).select(
+					$"splitData".getItem(0).as("edge_id"),
+					$"splitData".getItem(1).as("serial_number"),
+					$"splitData".getItem(3).cast("Timestamp").as("ts"),
+					$"splitData".getItem(4).cast("Double").as("depth"),
+					$"splitData".getItem(5).cast("Double").as("value")
+					)
+    				.withColumn("ts10min",date_format(col("ts"), "yyyyMMddHHmm")).as("ts10min")
     sens_df.printSchema()
-    sens_df.createOrReplaceTempView("sens_detail")
 
-    val sens_det = sparkSession.sql ("""
-          select serial_number
-		,ts10min
-		,ts
-		,depth
-		,value
-          from sens_detail
-         """);
-    println(s"after sql statement ")
-    sens_det.printSchema()
-
-    val windowedCount = sens_det
+    val windowedCount = sens_df
       .groupBy( window($"ts", "1 minutes", "1 minutes"),$"serial_number")
       .agg(
-	   max($"depth").alias("max_depth"),min($"depth").alias("min_depth"),
+           max($"depth").alias("max_depth"),min($"depth").alias("min_depth"),
            mean($"depth").alias("mean_depth"),stddev($"depth").alias("stddev_depth"),
-	   avg($"depth").alias("avg_depth"), sum($"depth").alias("sum_depth"),
-	   max($"value").alias("max_value"),min($"value").alias("min_value"),
+           avg($"depth").alias("avg_depth"), sum($"depth").alias("sum_depth"),
+           max($"value").alias("max_value"),min($"value").alias("min_value"),
            mean($"value").alias("mean_value"),stddev($"value").alias("stddev_value"),
-  	   avg($"value").alias("avg_value"), sum($"value").alias("sum_value"),
-	   count($"ts").alias("row_count") 
+           avg($"value").alias("avg_value"), sum($"value").alias("sum_value"),
+           count($"ts").alias("row_count")
           )
     println(s"after window ")
 
-    val clean_df = windowedCount.selectExpr ( "serial_number", 
- 	"Cast(date_format(window.start, 'yyyyMMddHHmm') as string) as ts10min",
-	"Cast(max_depth as double) as max_depth",
-	"Cast(min_depth as double) as min_depth",
-	"Cast(avg_depth as double) as avg_depth",
-	"Cast(sum_depth as double) as sum_depth",
-	"Cast(mean_depth as double) as mean_depth",
-	"Cast(stddev_depth as double) as stddev_depth",
-	"Cast(max_value as double) as max_value",
-	"Cast(min_value as double) as min_value",
-	"Cast(avg_value as double) as avg_value",
-	"Cast(sum_value as double) as sum_value",
-	"Cast(mean_value as double) as mean_value",
-	"Cast(stddev_value as double) as stddev_value",
-	"Cast(row_count as int) as row_count"
-	)
+    val clean_df = windowedCount.selectExpr ( "serial_number",
+        "Cast(date_format(window.start, 'yyyyMMddHHmm') as string) as ts10min",
+        "Cast(max_depth as double) as max_depth",
+        "Cast(min_depth as double) as min_depth",
+        "Cast(avg_depth as double) as avg_depth",
+        "Cast(sum_depth as double) as sum_depth",
+        "Cast(mean_depth as double) as mean_depth",
+        "Cast(stddev_depth as double) as stddev_depth",
+        "Cast(max_value as double) as max_value",
+        "Cast(min_value as double) as min_value",
+        "Cast(avg_value as double) as avg_value",
+        "Cast(sum_value as double) as sum_value",
+        "Cast(mean_value as double) as mean_value",
+        "Cast(stddev_value as double) as stddev_value",
+        "Cast(row_count as int) as row_count"
+        )
 
     println(s"after clean_df ")
     clean_df.printSchema()
 
- 
-/*
-    --   decided not to join this here as it makes very wide table
-    --    can join in analtyic query later but it works  :)
-    val joined_df = clean_df.join(sens_meta_df, Seq("serial_number"))
-    println(s"after joined_df ")
-    joined_df.printSchema()
-*/
-  
     val det_query = sens_df.writeStream
       .format("org.apache.spark.sql.cassandra")
       .option("checkpointLocation", "dsefs://node0:5598/checkpoint/detail/")
@@ -191,23 +164,24 @@ class SparkJob extends Serializable {
       .start()
 
 /*
-    val win_query = clean_df.writeStream
+    val sens_small_df = sens_df.select("serial_number","ts")
+
+    val det_query = sens_small_df.writeStream
       .format("console")
-      .option("truncate", "true")
+      .option("truncate", "false")
       .outputMode(OutputMode.Update)
       .start()
 
-    val win_query = clean_df.writeStream
-      .format("csv")
-      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/summaryfile/")
-      .option("path", "dsefs://node0:5598/summaryoutput/")
-      .option("truncate", "true")
-      .outputMode(OutputMode.Append)
+    val clean_small_df = clean_df.select ("serial_number","ts10min","row_count")
+
+    val win_query = clean_small_df.writeStream
+      .format("console")
+      .option("truncate", "false")
+      .outputMode(OutputMode.Update)
       .start()
 */
 
     win_query.awaitTermination()
-
     det_query.awaitTermination()
     det2_query.awaitTermination()
 //     better might be awaitAnyTermination
