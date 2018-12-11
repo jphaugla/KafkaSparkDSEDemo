@@ -154,6 +154,7 @@ class SparkJob extends Serializable {
       .option("table", "last")
       .outputMode(OutputMode.Update)
       .start()
+    println (s"after write to last")
 
     val win_query = clean_df.writeStream
       .format("org.apache.spark.sql.cassandra")
@@ -162,6 +163,7 @@ class SparkJob extends Serializable {
       .option("table", "sensor_summary")
       .outputMode(OutputMode.Update)
       .start()
+    println (s"after write to sensor_summary")
 
 /*
     val sens_small_df = sens_df.select("serial_number","ts")
