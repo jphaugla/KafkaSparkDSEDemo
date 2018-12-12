@@ -6,6 +6,7 @@ mvn
 sbt
 ntp
 kafka
+kafkapython
 change_git_owner
 fix_spark_perms
 package_producer
@@ -13,6 +14,6 @@ package_consumer
 hugo
 create_tables
 load_meta
-run_consumer
-run_producer
+#run_consumer
+#run_producer
 workbooks
