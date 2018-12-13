@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS demo.sensor_meta
 
 CREATE TABLE IF NOT EXISTS demo.sensor_summary
 ( serial_number text,
-  ts10min text,
+  window_start timestamp,
   max_depth double,
   max_value  double,
   min_depth double,

@@ -119,7 +119,8 @@ class SparkJob extends Serializable {
     println(s"after window ")
 
     val clean_df = windowedCount.selectExpr ( "serial_number",
-        "Cast(date_format(window.start, 'yyyyMMddHHmm') as string) as ts10min",
+//        "Cast(date_format(window.start, 'yyyyMMddHHmm') as string) as ts10min",
+        "Cast(window.start as timestamp) as window_start",
         "Cast(max_depth as double) as max_depth",
         "Cast(min_depth as double) as min_depth",
         "Cast(avg_depth as double) as avg_depth",
