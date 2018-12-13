@@ -1,0 +1,5 @@
+serial_number,deploy_date,floor,hive_num,latitude,longitude,main_date,manuf_date,retired,sensor_type,vendor,wing,lat_long
+9ba640cf-750c-11e6-834d-5fcfed080ab0,2015-09-12 03:09:22+0000,29,1,-16.49934,-62.8307,2016-01-31 21:34:58+0000,2015-08-09 17:50:01+0000,FALSE,Humidity,Silence,North-West-1C,"-16.49934,-62.8307"
+9ba18547-750c-11e6-834d-5fcfed080ab0,2016-08-05 10:55:42+0000,31,1,-27.82914,-38.3379,2016-08-07 20:04:02+0000,2014-01-21 20:27:27+0000,FALSE,Humidity,Chaos Assembly,North-West-1F,"-27.82914,-38.3379"
+9ba30c01-750c-11e6-834d-5fcfed080ab0,2015-10-11 10:08:32+0000,66,1,-42.92576,106.0872,2016-07-08 00:02:47+0000,2014-01-14 10:38:03+0000,FALSE,Humidity,Parallel,West-1C,"-42.92576,106.0872"
+9b95ec53-750c-11e6-834d-5fcfed080ab0,2015-09-09 12:23:16+0000,6,1,35.52559,41.2604,2015-11-18 17:35:00+0000,2014-04-04 21:57:21+0000,FALSE,Motion/Humidity,Shadow Council,South-East-1D,"35.52559,41.2604"
