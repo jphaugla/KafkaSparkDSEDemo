@@ -10,6 +10,28 @@ containsElement () {
   return 1
 }
 
+
+options=$(getopt -o brg --long list -- "$@")
+[ $? -eq 0 ] || { 
+    echo "Incorrect options provided"
+    exit 1
+}
+CMD="list"
+eval set -- "$options"
+while true; do
+    case "$1" in
+    --list)
+        CMD="list"
+        ;;
+    --)
+        shift
+        break
+        ;;
+    esac
+    shift
+printf "CMD:%s\n" ${CMD} 1>&2
+done
+
 # locate non-relative script dir
 MAIN_SCRIPT_BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -17,25 +39,29 @@ MAIN_SCRIPT_BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 MAIN_SCRIPT="${MAIN_SCRIPT_BASEDIR}/"$( basename $0 )
 EXECUTION_DIR=$(dirname ${MAIN_SCRIPT})
 
-
-# locate .startup directory
+##
+## locate .startup directory
+##
 MAIN_SCRIPT_DIRNAME=$(dirname $MAIN_SCRIPT)
 if [ "${MAIN_SCRIPT_DIRNAME}" = ".startup" ]
 then export COMPONENTS_DIRNAME="${MAIN_SCRIPT_DIRNAME}"
 else export COMPONENTS_DIRNAME="${MAIN_SCRIPT_DIRNAME}/.startup"
 fi
+MANAGED_COMPONENTS_DIRNAME="${COMPONENTS_DIRNAME}/managed-scripts"
 
-# sanity check for only one startup script
+##
+## sanity check that there is only one startup script
+##
 if [ -f "${COMPONENTS_DIRNAME}/startup" -a -f "${COMPONENTS_DIRNAME}/../startup" ]
 then
- printf "ERROR: You must choose where to put your one and only 'startup' script.\n"
+ printf "# ERROR: You must choose where to put your one and only 'startup' script.\n"
  printf "You have one in both locations below:\n%s\n%s\n" "${COMPONENTS_DIRNAME}/startup" "${COMPONENTS_DIRNAME}/../startup"
  exit 2
 fi
 
 if [ ! -d "${COMPONENTS_DIRNAME}" ]
 then
- printf "ERROR: component scripts directory '${COMPONENTS_DIRNAME}' does not exist.\n"
+ printf "# ERROR: component scripts directory '${COMPONENTS_DIRNAME}' does not exist.\n"
  exit 2
 fi
 
@@ -49,59 +75,90 @@ while read -r line
 do
  if [ "$line" = "startup.order" ] ; then continue ; fi
  if [ "$line" = "startup" ] ; then continue ; fi
- if [ ! -x "${COMPONENTS_DIRNAME}/$line" ] ; then continue ; fi
+ if [ "$line" = "managed-scripts" ] ; then continue ; fi
+ if [ ! -x "${COMPONENTS_DIRNAME}/$line" -o ! -f "${COMPONENTS_DIRNAME}/$line" ] ; then continue ; fi
  if [ -z "$line" ] ; then continue; fi
  component_scriptnames_ary+=("$line")
 done <<< "$SCRIPT_DATA"
-#printf "DEBUG: component_scriptname: %s\n" "${component_scriptnames_ary[@]}" 1>&2
+#printf "# DEBUG: component_scriptname: %s\n" "${component_scriptnames_ary[@]}" 1>&2
+
+managed_scripts_ary=()
+if [ -d "${MANAGED_COMPONENTS_DIRNAME}" ]
+then
+# printf "# INFO: reading managed scripts in %s ...\n" "${MANAGED_COMPONENTS_DIRNAME}" 1>&2
+ SCRIPT_DATA=$(cd ${MANAGED_COMPONENTS_DIRNAME}; /bin/ls)
+ while read -r line
+ do
+  if [ ! -x "${MANAGED_COMPONENTS_DIRNAME}/$line" -o ! -f "${MANAGED_COMPONENTS_DIRNAME}/$line" ] ; then continue ; fi
+  if [ -z "$line" ] ; then continue; fi
+#  printf "# INFO: read managed script: %s\n" "$line" 1>&2
+  managed_scripts_ary+=("$line")
+  done <<< "$SCRIPT_DATA"
+#printf "# DEBUG: component_scriptname: %s\n" "${component_scriptnames_ary[@]}" 1>&2
+fi
 
 ##
 ## Initialize ordered components array
 ##
-component_order_ary=()
+component_order_from_file=()
 
 export ORDER_FILE="${COMPONENTS_DIRNAME}/startup.order"
-if [ -f "${ORDER_FILE}" ]
+if [ ! -f "${ORDER_FILE}" ]
 then
- # printf "DEBUG: loading order file: %s\n" "${ORDER_FILE}" 1>&2
+ component_order_from_file=("${component_scriptnames_ary[@]}")
+else
+ # printf "# DEBUG: loading order file: %s\n" "${ORDER_FILE}" 1>&2
+ ##
+ ## Verify that component scripts referenced in the startup order are present and executable
+ ##
  ORDER_DATA=$(cat ${ORDER_FILE})
  while read -r line
  do
   if [ "$line" = "startup.order" ] ; then continue ; fi
   if [ "$line" = "startup" ] ; then continue ; fi
-  component_order_ary+=("$line")
-  COMPONENT_SCRIPT="${COMPONENTS_DIRNAME}/$line"
-  if [ ! -x "${COMPONENT_SCRIPT}" ]
-  then
-   printf "ERROR: component startup script '${COMPONENT_SCRIPT}' is not executable or it is missing.\n";
-   printf "ERROR: (it was referenced in the startup.order file in ${COMPONENTS_DIRNAME} )\n";
-   exit 2
+#  if [ "${line:0:1}" = "3" ] ; then line= ${line#\#}; fi
+  component_order_from_file+=("$line")
+  line=${line#\#}
+
+  if [ -x "${COMPONENTS_DIRNAME}/${line}" ]
+  then COMPONENT_SCRIPT="${COMPONENTS_DIRNAME}/$line"
+  elif [ -x "${MANAGED_COMPONENTS_DIRNAME}/${line}" ]
+  then COMPONENT_SCRIPT="${MANAGED_COMPONENTS_DIRNAME}/${line}"
+  else
+    printf "# ERROR: component startup script '${line}' is not executable or it is missing.\n";
+    printf "# ERROR: (it was referenced in the startup order at ${COMPONENTS_DIRNAME}/startup.order )\n";
+    printf "# ERROR: (it was not found in either ${COMPONENTS_DIRNAME} or ${MANAGED_COMPONENTS_DIRNAME}\n";
+    exit 2
   fi
  done <<< "${ORDER_DATA}"
 
-  # verify that all named components found in script form
-  # exist in the startup.order file
+ ##
+ ## verify that all named components found in script form exist in the startup.order file
+ ##
  for component_scriptname in "${component_scriptnames_ary[@]}"
  do
 #  printf "checking %s for ordering membership.\n" "$component_scriptname" 1>&2
-  if ! containsElement "${component_scriptname}" "${component_order_ary[@]}"
+  if ! containsElement "${component_scriptname}" "${component_order_from_file[@]}" && ! containsElement "#${component_scriptname}" "${component_order_from_file[@]}"
   then
-   printf "ERROR: There is a startup.order file, but script '${component_scriptname}' is not listed in it.\n"
+   printf "# ERROR: There is a startup.order file, but script '${component_scriptname}' is not listed in it.\n"
    exit 2
   fi
  done
-else
- component_order_ary=("${component_scriptnames_ary[@]}")
 fi
-#printf "DEBUG: component_order: %s\n" "${component_order_ary[@]}" 1>&2
+#printf "# DEBUG: component_order: %s\n" "${component_order_from_file[@]}" 1>&2
 
-# warn if no component scripts found
-if [ "${#component_order_ary[@]}" -eq 0 ]
+##
+## warn if no component scripts found
+##
+if [ "${#component_order_from_file[@]}" -eq 0 ]
 then
- printf "ERROR: There are no component scripts in ${COMPONENTS_DIRNAME}\n";
+ printf "# ERROR: There are no executable scripts in ${COMPONENTS_DIRNAME}\n";
  exit 2
 fi
 
+##
+## warn if order is not explicit
+##
 if [ ! -f "${ORDER_FILE}" ]
 then
  printf "# WARNING: Component order is based on filenames.\n" 1>&2
@@ -109,53 +166,130 @@ then
 fi
 
 ##
-## Initialized selected components array
+## Initialize selected components array
 ##
 selected_components_ary=()
-# printf "DEBUG: arg:[%s]\n" $* 1>&2
+# printf "# DEBUG: arg:[%s]\n" $* 1>&2
 if [ "all" = "$1" ]
 then
- printf "# INFO: selecting all components\n"; 1>&2
- selected_components_ary=("${component_order_ary[@]}")
+  printf "# INFO: selecting all components\n"; 1>&2
+  selected_components_ary=("${component_order_from_file[@]}")
+  printf "# DEBUG: selected from file: %s\n" "${selected_components_ary[@]}"
 elif [ ! -z "$1" ]
 then
- printf "# INFO: selecting specific components: $*\n"; 1>&2
- selected_components_ary=( "$@" )
- #do selected_components_ary+=("$line")
+  printf "# INFO: selecting specific components: $*\n"; 1>&2
+  selected_components_ary=( "$@" )
+  #do selected_components_ary+=("$line")
 else
- printf "INFO: You must select from the following available components, or specify 'all':\n" 1>&2
- printf "%s\n" "${component_order_ary[@]}"
- exit 0
+  printf "# INFO: You must select from the following available components, or specify 'all':\n" 1>&2
+  printf "%s\n" "${component_order_from_file[@]}" 1>&2
+  if [ "${#managed_scripts_ary[@]}" -gt "0" ]
+  then
+    managed_overrides=( "$@" )
+    managed_available=( "$@" )
+    for managed in "${managed_scripts_ary[@]}"
+    do
+      if containsElement "$managed" "${component_order_from_file[@]}"
+      then managed_overrides+=("${managed}")
+      else managed_available+=("${managed}")
+    fi
+    done
+    if [ "${#managed_available}" -gt "0" ]
+    then
+      printf "# INFO: You may also select from managed-scripts, but they are not included with 'all':\n" 1>&2
+      printf "%s\n" "${managed_available[@]}" 1>&2
+    fi
+    if [ "${#managed_overrides}" -gt "0" ]
+    then
+      printf "# INFO: The following scripts are not available from managed-scripts because they are overridden above:\n" 1>&2
+      printf "%s\n" "${managed_overrides[@]}" 1>&2
+    fi
+  fi
+  exit 0
 fi
-# printf "DEBUG: selected_component: %s\n" "${selected_components_ary[@]}" 1>&2
+#printf "# DEBUG: selected_component: %s\n" "${selected_components_ary[@]}" 1>&2
 
+##
+## Error if selected components can not be found
+##
 for selected in "${selected_components_ary[@]}"
 do
- if ! containsElement "${selected}" "${component_order_ary[@]}"
+ if ! containsElement "${selected}" "${component_order_from_file[@]}" && \
+    ! containsElement "#${selected}" "${component_order_from_file[@]}" && \
+    ! containsElement "${selected}" "${managed_scripts_ary}" && \
+    ! [ -x "${COMPONENTS_DIRNAME}/${selected}" ]
  then
   printf "%s was specified, but no such component could be found.\n" "${selected}"
   exit 2
  fi
 done
 
+##
+## Add selected components in configured order, and log which ones are skipped
+##
 ordered_components_ary=()
-for component in "${component_order_ary[@]}"
+for component in "${component_order_from_file[@]}"
 do
+ component=${component#\#}
  if containsElement "${component}" "${selected_components_ary[@]}"
- then ordered_components_ary+=("${component}")
+ then
+   ordered_components_ary+=("${component}")
  else
   printf "# INFO: component '%s' is being skipped\n" "${component}" 1>&2
  fi
 done
-# printf "ordered_components_ary: %s\n" "${ordered_components_ary[@]}" 1>&2
+
+for component in "${managed_scripts_ary[@]}"
+do
+ component=${component#\#}
+ # printf "# DEBUG: component: %s\n" "${component}"
+ # printf "# DEBUG: ordered_components_ary: %s\n" "${ordered_components_ary[@]}"
+ # printf "# DEBUG: selected_components_ary: %s\n" "${ordered_components_ary[@]}"
+ if ! containsElement "${component}" "${ordered_components_ary[@]}" && containsElement "${component}" "${selected_components_ary[@]}"
+ then ordered_components_ary+=("${component}")
+ printf "# INFO: including managed script after ordered scripts: %s\n" "${component}" 1>&2
+ fi
+done
+
+remaining_ary=()
+for selected in "${selected_components_ary[@]}"
+do
+  if ! containsElement "${selected}" "${ordered_components_ary[@]}"
+  then remaining_ary+=("${selected}")
+  fi
+done
+selected_components_ary=(${remaining_ary[@]})
+
+for component in "${selected_components_ary[@]}"
+do
+  if [ -x "${COMPONENTS_DIRNAME}/${component}" ]
+  then
+    printf "# INFO: adding raw script: %s\n" "${component}"
+    ordered_components_ary+=("${component}")
+  fi
+done
+
+#printf "# ordered components: %s\n" "${ordered_components_ary[@]}" 1>&2
+
+#printf "component_order_from_file: %s\n" "${component_order_from_file[@]}" 1>&2
+#printf "ordered_components_ary: %s\n" "${ordered_components_ary[@]}" 1>&2
 
 # execute components in order
 for selected in "${ordered_components_ary[@]}"
 do
- if containsElement "${selected}" "${component_order_ary[@]}"
- then
-  FULL_SCRIPT_PATH="${COMPONENTS_DIRNAME}/${selected}"
-  printf "# INFO: executing: %s\n" "${selected}"
+  printf "# DEBUG: selected: %s\n" "${selected}"
+  FULL_SCRIPT_PATH="UNKNOWN"
+  #printf "# DEBUG: executing selected component: %s\n" ${selected}
+  if [ -x "${COMPONENTS_DIRNAME}/${selected}" ]
+    then FULL_SCRIPT_PATH="${COMPONENTS_DIRNAME}/${selected}"
+    elif [ -x "${MANAGED_COMPONENTS_DIRNAME}/${selected}" ]
+    then FULL_SCRIPT_PATH="${MANAGED_COMPONENTS_DIRNAME}/${selected}"
+    else
+    printf "# ERROR: selected script %s was not found.\n" "${selected}"
+    exit 2
+  fi
+
+  # printf "# DEBUG: executing: %s at path: %s\n" "${selected}" "${FULL_SCRIPT_PATH}"
   export PROJECT_DIRECTORY=$(dirname ${COMPONENTS_DIRNAME})
   export SELECTED_COMPONENTS="${ordered_components_ary[@]}"
   export CURRENT_COMPONENT="${selected}"
@@ -165,10 +299,6 @@ do
   last_status=$?
   if [[ last_status -ne 0 ]]
   then
-   printf "ERROR: script %s failed with status: %s\n" "${FULL_SCRIPT_PATH}" "${last_status}"
+   printf "# ERROR: script %s failed with status: %s\n" "${FULL_SCRIPT_PATH}" "${last_status}"
   fi
- else
-  printf "ERROR component '%s'  was not found in ${COMPONENTS_DIRNAME}\n" "${selected}"
-  exit 2;
- fi
 done
