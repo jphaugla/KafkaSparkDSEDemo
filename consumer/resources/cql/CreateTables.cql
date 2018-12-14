@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS demo.sensor_meta
 
 CREATE TABLE IF NOT EXISTS demo.sensor_summary
 ( serial_number text,
-  window_start timestamp,
+  ts10min text,
   max_depth double,
   max_value  double,
   min_depth double,
@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS demo.sensor_summary
   stddev_depth double,
   stddev_value double,
   row_count   int,
-  PRIMARY KEY ((serial_number),window_start))
-WITH CLUSTERING ORDER BY (window_start DESC)
+  PRIMARY KEY ((serial_number),ts10min))
+WITH CLUSTERING ORDER BY (ts10min DESC)
   and compaction = {'compaction_window_size': '1', 
     				  'compaction_window_unit': 'DAYS', 
     				  'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy'}
