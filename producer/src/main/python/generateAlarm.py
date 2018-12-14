@@ -15,7 +15,7 @@ filename = "producer/data/hive_sensorsClean5.csv"
 f = open(filename,'r') 
 #  get current time
 current_time = str(datetime.datetime.now() )
-        cntr = 0
+cntr = 0
 edge_id = "Edge 1"
 #   use the csv reader to parse the csv file
 csv_f = csv.reader(f)
