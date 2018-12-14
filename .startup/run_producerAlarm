@@ -1,1 +1,1 @@
-sudo -H -u ds_user bash -c 'nohup ./producer/src/main/python/generateData.py > ~/producerRun.log &'
+sudo -H -u ds_user bash -c 'nohup ./producer/src/main/python/generateAlarm.py > ~/producerAlarm.log &'

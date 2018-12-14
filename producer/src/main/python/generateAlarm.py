@@ -24,9 +24,9 @@ for nextSensor in csv_f:
 #  generate random movement number
 	cntr += 1
 	if cntr > 1:
-		depth = random.randint(100, 300) + random.random()
+		depth = random.randint(101, 300) + random.random()
 #   generate random humidity set
-		value = random.randint(100, 200) + random.random()
+		value = random.randint(101, 200) + random.random()
 #   sensor serial number is first column in the csv
 		serial_number = nextSensor[0]
 #   send to the link
