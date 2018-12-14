@@ -105,6 +105,12 @@ class SparkJob extends Serializable {
     				.withColumn("ts10min",date_format(col("ts"), "yyyyMMddHHmm")).as("ts10min")
     sens_df.printSchema()
 
+    alarm_df = sens_df.select("edge_id","serial_number","ts","depth","value").where("value > 100.00" )
+
+    println(s"alarm df ")
+
+    alarm_df.printSchema()
+
     val windowedCount = sens_df
       .groupBy( window($"ts", "1 minutes", "1 minutes"),$"serial_number")
       .agg(
@@ -165,6 +171,15 @@ class SparkJob extends Serializable {
       .start()
     println (s"after write to sensor_summary")
 
+    val alarm_query = alarm_df.writeStream
+      .format("org.apache.spark.sql.cassandra")
+      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/alarm/")
+      .option("keyspace", "demo")
+      .option("table", "sensor_alarm")
+      .outputMode(OutputMode.Update)
+      .start()
+    println (s"after write to sensor_alarm")
+
 /*
     val sens_small_df = sens_df.select("serial_number","ts")
 
@@ -186,6 +201,7 @@ class SparkJob extends Serializable {
     win_query.awaitTermination()
     det_query.awaitTermination()
     det2_query.awaitTermination()
+    alarm_query.awaitTermination()
 //     better might be awaitAnyTermination
 //    sparkSession.streams.awaitAnyTermination()
     println(s"after awaitTermination ")

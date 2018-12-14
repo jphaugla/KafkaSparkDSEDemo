@@ -24,6 +24,17 @@ CREATE TABLE if not exists demo.last (
 	PRIMARY KEY (( serial_number ))
 );
 
+CREATE TABLE if not exists demo.sensor_alarm (
+	edge_id text,
+	serial_number text,
+	ts10min text,
+	ts timestamp,
+        depth double,
+	value double,
+	PRIMARY KEY (( serial_number ))
+);
+
+
 CREATE TABLE if not exists demo.count (
 	pk int,
 	ts timestamp,
