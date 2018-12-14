@@ -105,7 +105,7 @@ class SparkJob extends Serializable {
     				.withColumn("ts10min",date_format(col("ts"), "yyyyMMddHHmm")).as("ts10min")
     sens_df.printSchema()
 
-    val alarm_df = sens_df.select("edge_id","serial_number","ts","depth","value","ts10min").where("value > 100.00" )
+    val alarm_df = sens_df.select("edge_id","serial_number","ts","depth","value","ts10min").where("value > 101.00" )
 
     println(s"alarm df ")
 
