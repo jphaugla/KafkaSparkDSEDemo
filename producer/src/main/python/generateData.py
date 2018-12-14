@@ -12,7 +12,7 @@ producer = KafkaProducer(bootstrap_servers='node0:9092')
 #  keep this open until killed
 while 1:
 	#  open csv file holding sensors metadata 
-	filename = "producer/data/hive_sensorsClean5.csv"
+	filename = "producer/data/hive_sensorsClean1000.csv"
 	f = open(filename,'r') 
 	#  get current time
 	current_time = str(datetime.datetime.now() )
