@@ -1,5 +1,5 @@
 languageCode = "en-us"
-title = "Fraud Structured Streaming Proofshop"
+title = "IOT Structured Streaming Proofshop"
 theme = "hugo-material-docs"
 metadataformat = "yaml"
 canonifyurls = true
@@ -8,7 +8,7 @@ baseUrl = "/"
 disableKinds = ["taxonomy","taxonomyTerm"]
 
 [params]
-	description = "DSE Analytics Fraud Structured Streaming Proofshop"
+	description = "DSE Analytics IOT Structured Streaming Proofshop"
 
 	logo = "images/asset-hub.svg"
 	favicon = "/images/asset-hub.png"
@@ -32,7 +32,7 @@ disableKinds = ["taxonomy","taxonomyTerm"]
 
 
 [[menu.main]]
-	name = "DSE Analytics Fraud Structured Streaming"
+	name = "DSE Analytics IOT Structured Streaming"
 	url    = "/"
 	weight = 10
 [[menu.main]]
