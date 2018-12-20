@@ -5,7 +5,7 @@ This is a guide for how to use the IOT Structured Streaming Proofshop brought to
 
 *WARNING* Don't try to run this with the default m3.xlarge node type-it won't work!!! Use an m3.2xlarge to be successful.
 
-*WARNING*  There is a bug in Spark that is fixed in 6.0.5.  Before this fix, the spark tiem window will not produce correct results.  So, wait for 6.0.5 if correct results in the sensor_summary table are important.
+*WARNING*  There is a bug in Spark that is fixed in 6.0.5.  Before this fix, the spark time window will not produce correct results.  So, wait for 6.0.5 if correct results in the sensor_summary table are important.
 
 ### Motivation
 
