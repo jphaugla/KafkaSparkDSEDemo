@@ -14,12 +14,12 @@ The structured streaming will have hands on interaction using a notebook queries
 
 ## Content
 
-The proofshop is built around the concept of DS Bank, a hypothetical financial institution looking to immediately detect fraudulent activity 
+The proofshop is built around the concept of an IOT streaming application.  A python script uses a descriptive sensor metadata file to generate realistic sensor data to a kafka queue.
 
 
 ##  Presentation
 
-The presentation to be used with the workshop can be found here: https://drive.google.com/open?id=1lK--68IkNX5GWG2Kxjshwtlv-evdOP57
+The presentation to be used with the workshop can be found here: https://drive.google.com/open?id=11GG5MqGPaEjWSkBUxZFVB6Y06EmDmlbs
 
 ## Hands-On Exercises
 

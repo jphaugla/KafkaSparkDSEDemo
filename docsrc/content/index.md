@@ -13,7 +13,7 @@ The IOT Structured Streaming Proofshop is a targeted event to prove structured s
 
 ### What is included?
 
-A Powerpoint presentation will walk the prospect through DSE Spark Structured Streaming and the use case.
+A Powerpoint presentation will walk the prospect through DSE Spark Structured Streaming and IOT for this use case.
 
 
 ### Business Take Aways
@@ -24,4 +24,4 @@ DataStax-powered solutions deliver a highly personalized, responsive, and consis
 
 ### Technical Take Aways
 
-Understand how spark structured streaming allows real-time decision making in an easy-to-create and easy-to-maintain Spark Dataset environment.  Paralleling the transition from RDDs to Datasets, streaming has gone from complex DStreams to easy-to-use Structured Streaming.  The combination of structured streaming with DataStax allows joining streams and cassandra tables to do real-time analytics.  
+Understand how spark structured streaming allows real-time decision making in an easy-to-create and easy-to-maintain Spark Dataset environment.  Paralleling the transition from RDDs to Datasets, streaming has gone from complex DStreams to easy-to-use Structured Streaming.  The combination of structured streaming with DataStax allows real time stream analytics.
