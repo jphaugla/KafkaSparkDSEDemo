@@ -3,9 +3,9 @@ IOT Structured Streaming Proofshop
 
 This is a guide for how to use the IOT Structured Streaming Proofshop brought to you by the DataStax field team.
 
-<b>WARNING</b> Don't try to run this with the default m3.xlarge node type-it won't work!!! Use an m3.2xlarge to be successful.
+*WARNING* Don't try to run this with the default m3.xlarge node type-it won't work!!! Use an m3.2xlarge to be successful.
 
-<b>WARNING</b>  There is a bug in Spark that is fixed in 6.0.5.  Before this fix, the spark tiem window will not produce correct results.  So, wait for 6.0.5 if correct results in the sensor_summary table are important.
+*WARNING*  There is a bug in Spark that is fixed in 6.0.5.  Before this fix, the spark tiem window will not produce correct results.  So, wait for 6.0.5 if correct results in the sensor_summary table are important.
 
 ### Motivation
 
@@ -24,6 +24,6 @@ DataStax enables immediate, real-time IOT alarm, dashboarding, and analysis
 DataStax-powered solutions deliver a highly personalized, responsive, and consistent experience whatever the channel, location, or volume of customers and transactions. Customers will have an engaging experience that drives customer satisfaction and advocacy, which translates to increased brand loyalty and revenue growth.
 
 ### Technical Take Aways
-<b>WARNING</b> Don't try to run this with the default m3.xlarge node type-it won't work!!! Use an m3.2xlarge to be successful.
+*WARNING* Don't try to run this with the default m3.xlarge node type-it won't work!!! Use an m3.2xlarge to be successful.
 
 Understand how spark structured streaming allows real-time decision making in an easy-to-create and easy-to-maintain Spark Dataset environment.  Paralleling the transition from RDDs to Datasets, streaming has gone from complex DStreams to easy-to-use Structured Streaming.  The combination of structured streaming analytics with DataStax provides the real-time analytics needed in IOT
