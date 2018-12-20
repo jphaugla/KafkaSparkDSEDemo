@@ -102,10 +102,10 @@ class SparkJob extends Serializable {
 					$"splitData".getItem(4).cast("Double").as("depth"),
 					$"splitData".getItem(5).cast("Double").as("value")
 					)
-    				.withColumn("ts10min",date_format(col("ts"), "yyyyMMddHHmm")).as("ts10min")
+    				.withColumn("time_bucket",date_format(col("ts"), "yyyyMMddHHmm")).as("time_bucket")
     sens_df.printSchema()
 
-    val alarm_df = sens_df.select("edge_id","serial_number","ts","depth","value","ts10min").where("value > 101.00" )
+    val alarm_df = sens_df.select("edge_id","serial_number","ts","depth","value","time_bucket").where("value > 101.00" )
 
     println(s"alarm df ")
 
@@ -125,7 +125,7 @@ class SparkJob extends Serializable {
     println(s"after window ")
 
     val clean_df = windowedCount.selectExpr ( "serial_number",
-        "Cast(date_format(window.start, 'yyyyMMddHHmm') as string) as ts10min",
+        "Cast(date_format(window.start, 'yyyyMMddHHmm') as string) as time_bucket",
         "Cast(max_depth as double) as max_depth",
         "Cast(min_depth as double) as min_depth",
         "Cast(avg_depth as double) as avg_depth",
@@ -189,7 +189,7 @@ class SparkJob extends Serializable {
       .outputMode(OutputMode.Update)
       .start()
 
-    val clean_small_df = clean_df.select ("serial_number","ts10min","row_count")
+    val clean_small_df = clean_df.select ("serial_number","time_bucket","row_count")
 
     val win_query = clean_small_df.writeStream
       .format("console")

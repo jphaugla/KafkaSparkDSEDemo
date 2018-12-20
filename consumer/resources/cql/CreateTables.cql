@@ -3,11 +3,11 @@ CREATE KEYSPACE if not exists demo WITH REPLICATION = {'class': 'SimpleStrategy'
 CREATE TABLE if not exists demo.sensor_detail (
 	edge_id text,
 	serial_number text,
-	ts10min text,
+	time_bucket text,
 	ts timestamp,
 	depth double,
 	value double,
-	PRIMARY KEY (( serial_number, ts10min ), ts)
+	PRIMARY KEY (( serial_number, time_bucket ), ts)
 ) with clustering order by (ts DESC)
   and default_time_to_live = 604800
   and compaction = {'compaction_window_size': '1', 
@@ -17,7 +17,7 @@ CREATE TABLE if not exists demo.sensor_detail (
 CREATE TABLE if not exists demo.last (
 	edge_id text,
 	serial_number text,
-	ts10min text,
+	time_bucket text,
 	ts timestamp,
         depth double,
 	value double,
@@ -27,7 +27,7 @@ CREATE TABLE if not exists demo.last (
 CREATE TABLE if not exists demo.sensor_alarm (
 	edge_id text,
 	serial_number text,
-	ts10min text,
+	time_bucket text,
 	ts timestamp,
         depth double,
 	value double,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS demo.sensor_meta
 
 CREATE TABLE IF NOT EXISTS demo.sensor_summary
 ( serial_number text,
-  ts10min text,
+  time_bucket text,
   max_depth double,
   max_value  double,
   min_depth double,
@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS demo.sensor_summary
   stddev_depth double,
   stddev_value double,
   row_count   int,
-  PRIMARY KEY ((serial_number),ts10min))
-WITH CLUSTERING ORDER BY (ts10min DESC)
+  PRIMARY KEY ((serial_number),time_bucket))
+WITH CLUSTERING ORDER BY (time_bucket DESC)
   and compaction = {'compaction_window_size': '1', 
     				  'compaction_window_unit': 'DAYS', 
     				  'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy'}
@@ -86,7 +86,7 @@ WITH CLUSTERING ORDER BY (ts10min DESC)
 
 CREATE TABLE IF NOT EXISTS demo.sensor_full_summary
 ( serial_number text,
-  ts10min text,
+  time_bucket text,
   max_depth double,
   max_value  double,
   min_depth double,
@@ -112,13 +112,13 @@ CREATE TABLE IF NOT EXISTS demo.sensor_full_summary
   vendor     text,
   wing       text,
   lat_long   text,
-  PRIMARY KEY ((serial_number),ts10min))
-WITH CLUSTERING ORDER BY (ts10min DESC)
+  PRIMARY KEY ((serial_number),time_bucket))
+WITH CLUSTERING ORDER BY (time_bucket DESC)
 ;
 
 CREATE TABLE IF NOT EXISTS demo.dup_full_summary
 ( serial_number text,
-  ts10min text,
+  time_bucket text,
   max_depth double,
   max_value  double,
   min_depth double,
@@ -138,5 +138,5 @@ CREATE TABLE IF NOT EXISTS demo.dup_full_summary
   vendor     text,
   wing       text,
   lat_long   text,
-  PRIMARY KEY ((serial_number),ts10min))
-WITH CLUSTERING ORDER BY (ts10min DESC);
+  PRIMARY KEY ((serial_number),time_bucket))
+WITH CLUSTERING ORDER BY (time_bucket DESC);
