@@ -1,5 +1,5 @@
 val sparkVersion = "2.2.2"
-val dseVersion = "6.0.4"
+val dseVersion = "6.0.5"
 val kafkaVersion = "1.1.1"
 val akkaVersion = "2.3.12"
 
