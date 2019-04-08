@@ -40,6 +40,7 @@ import com.datastax.spark.connector.streaming._
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import org.apache.spark.sql.types.{IntegerType,StringType}
 
+import org.apache.spark.sql.streaming.Trigger
 
 
 object SparkKafkaConsumer {
@@ -153,6 +154,15 @@ class SparkJob extends Serializable {
       .start()
     println (s"after write to sensor_detail")
 
+    val dsefs_query = sens_df.writeStream
+      .format("parquet")
+      .option("checkpointLocation", "dsefs://node0:5598/checkpoint/dsefs/")
+      .option("path", "dsefs://node0:5598/parquet/")
+      .trigger(Trigger.ProcessingTime("120 seconds"))
+      .outputMode(OutputMode.Append)
+      .start()
+    println (s"after write to parquet")
+
     val det2_query = sens_df.writeStream
       .format("org.apache.spark.sql.cassandra")
       .option("checkpointLocation", "dsefs://node0:5598/checkpoint/detail2/")
@@ -201,6 +211,7 @@ class SparkJob extends Serializable {
     win_query.awaitTermination()
     det_query.awaitTermination()
     det2_query.awaitTermination()
+    dsefs_query.awaitTermination()
     alarm_query.awaitTermination()
 //     better might be awaitAnyTermination
 //    sparkSession.streams.awaitAnyTermination()
