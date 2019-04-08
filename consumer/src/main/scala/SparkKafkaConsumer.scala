@@ -154,11 +154,13 @@ class SparkJob extends Serializable {
       .start()
     println (s"after write to sensor_detail")
 
+//   this writes to dsefs file system
+//   to increase size of the parquet files, increase the processing time window
     val dsefs_query = sens_df.writeStream
       .format("parquet")
       .option("checkpointLocation", "dsefs://node0:5598/checkpoint/dsefs/")
       .option("path", "dsefs://node0:5598/parquet/")
-      .trigger(Trigger.ProcessingTime("120 seconds"))
+      .trigger(Trigger.ProcessingTime("240 seconds"))
       .outputMode(OutputMode.Append)
       .start()
     println (s"after write to parquet")
