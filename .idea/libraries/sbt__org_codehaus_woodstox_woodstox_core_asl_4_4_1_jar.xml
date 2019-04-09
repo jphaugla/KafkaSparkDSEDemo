@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: org.codehaus.woodstox:woodstox-core-asl:4.4.1:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.codehaus.woodstox/woodstox-core-asl/jars/woodstox-core-asl-4.4.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.codehaus.woodstox/woodstox-core-asl/srcs/woodstox-core-asl-4.4.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: org.jctools:jctools-core:2.1.1:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.jctools/jctools-core/bundles/jctools-core-2.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.jctools/jctools-core/srcs/jctools-core-2.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: org.psjava:psjava:0.1.19:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.psjava/psjava/jars/psjava-0.1.19.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.psjava/psjava/srcs/psjava-0.1.19-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

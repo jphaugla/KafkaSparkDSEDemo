@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: org.apache.directory.api:api-ldap-codec-standalone:1.0.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.directory.api/api-ldap-codec-standalone/jars/api-ldap-codec-standalone-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.directory.api/api-ldap-codec-standalone/srcs/api-ldap-codec-standalone-1.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
