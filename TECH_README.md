@@ -14,7 +14,7 @@ In order to run this demo, It is assumed that you have the following installed a
   3. git
   4. sbt
 
-##Getting Started with Kafka
+## Getting started with Kafka
 Use the steps below to setup up a local instance of Kafka for this example. This is based off of kafka_2.11-1.1.0.tgz
 
 
@@ -119,7 +119,7 @@ Show all of the messages in a topic from the beginning
 
   * `kafka-console-consumer.sh --zookeeper localhost:2181 --topic stream_ts --from-beginning`
   
-#Getting Started with Local DSE/Cassandra
+# Getting Started with Local DSE/Cassandra
 
 
 ### Starting DSE tarball install on the local OSX or Linux machine (-s starts search, -k starts Spark)
@@ -127,9 +127,9 @@ Show all of the messages in a topic from the beginning
 
   * `dse cassandra -k -s` 
   
-##Getting and running the demo
+## Getting and running the demo
 
-###In order to run this demo you will need to download the source from GitHub.
+### In order to run this demo you will need to download the source from GitHub.
 
   * Navigate to the directory where you would like to save the code.
   * Execute the following command:
@@ -145,7 +145,7 @@ Show all of the messages in a topic from the beginning
    
     `cqlsh -f consumer/resources/cql/loaddata.cql`
 
-###To build the demo
+### To build the demo
 
     to do standalone spark switch the build.sbt to build.sbt.spark2
      otherwise, this is set up for embedded datastax
@@ -161,7 +161,7 @@ Show all of the messages in a topic from the beginning
 
    see note at bottom if errors here
 
-###To run the demo
+### To run the demo
 
 This assumes you already have Kafka and DSE up and running and configured as in the steps above.
 
