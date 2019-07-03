@@ -1,3 +1,7 @@
+#  this is for standalone OSS spark against cassandra
 # copyTable.sh
+export SPARK_HOME=/Users/jasonhaugland/datastax/spark-2.4.0-bin-hadoop2.7
 $SPARK_HOME/bin/spark-submit \
-  --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.0-M3 ./copyTable.py 
+  --conf spark.cassandra.connection.host=127.0.0.1 \
+  --packages datastax:spark-cassandra-connector:2.4.0-s_2.11  ./copyTable.py
+

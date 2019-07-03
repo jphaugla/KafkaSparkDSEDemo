@@ -61,6 +61,24 @@ CREATE TABLE IF NOT EXISTS demo.sensor_meta
 )
 ;
 
+CREATE TABLE IF NOT EXISTS demo.dup_sensor_meta
+( serial_number text,
+  deploy_date timestamp,
+  floor int,
+  hive_num int,
+  latitude text,
+  longitude text,
+  main_date  timestamp,
+  manuf_date  timestamp,
+  retired    boolean,
+  sensor_type  text,
+  vendor     text,
+  wing       text,
+  lat_long   text,
+  PRIMARY KEY (serial_number)
+)
+;
+
 CREATE TABLE IF NOT EXISTS demo.sensor_summary
 ( serial_number text,
   time_bucket text,

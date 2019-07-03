@@ -1,11 +1,16 @@
 #standalone.py
 
-from pyspark import SparkContext, SparkConf
-from pyspark.sql import SQLContext
+from pyspark.sql import SparkSession
 
-conf = SparkConf().setAppName("Copy Cassandra Table")
-sc = SparkContext(conf=conf)
-sqlContext = SQLContext(sc)
+spark = SparkSession.builder \
+        .master("local") \
+        .appName("Copy sensor_meta") \
+        .getOrCreate()
 
-full_summary=sqlContext.read.format("org.apache.spark.sql.cassandra").options(table="sensor_full_summary", keyspace="demo").load()
-full_summary.write.format("org.apache.spark.sql.cassandra").options(table="dup_full_summary", keyspace = "demo").save(mode ="overwrite")
+sensor_meta=spark.read.format("org.apache.spark.sql.cassandra").options(table="sensor_meta", keyspace="demo").load()
+# sensor_meta.createCassandraTable("demo","dup_sensor_meta",partitionKeyColumns = Some(Seq(serial_number)))
+#      this method, createCassandraTable, is not available in python
+#      https://datastax-oss.atlassian.net/browse/SPARKC-525
+#
+save_options = { "table": "dup_sensor_meta", "keyspace": "demo", "confirm.truncate": "true"}
+sensor_meta.write.format("org.apache.spark.sql.cassandra").options(**save_options).save(mode ="overwrite")

@@ -1,9 +1,9 @@
 #standalone.py
 
-from pyspark import SparkContext, SparkConf
-from pyspark.sql import SQLContext
+from pyspark.sql import SparkSession
 
-conf = SparkConf().setAppName("Stand Alone Python Script")
-sc = SparkContext(conf=conf)
-sqlContext = SQLContext(sc)
-sqlContext.read.format("org.apache.spark.sql.cassandra").options(table="sensor_full_summary", keyspace="demo").load().show()
+spark = SparkSession.builder \
+        .master("local") \
+        .appName("Read sensorsumm") \
+        .getOrCreate()
+spark.read.format("org.apache.spark.sql.cassandra").options(table="sensor_meta", keyspace="demo").load().show()
