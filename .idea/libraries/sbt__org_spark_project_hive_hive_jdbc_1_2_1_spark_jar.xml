@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: org.spark-project.hive:hive-jdbc:1.2.1.spark:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.spark-project.hive/hive-jdbc/jars/hive-jdbc-1.2.1.spark.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.spark-project.hive/hive-jdbc/srcs/hive-jdbc-1.2.1.spark-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

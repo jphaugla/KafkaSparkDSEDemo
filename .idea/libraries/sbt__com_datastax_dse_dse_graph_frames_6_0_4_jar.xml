@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sbt: com.datastax.dse:dse-graph-frames:6.0.4:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.datastax.dse/dse-graph-frames/jars/dse-graph-frames-6.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

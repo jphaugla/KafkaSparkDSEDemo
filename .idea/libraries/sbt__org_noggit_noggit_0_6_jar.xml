@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: org.noggit:noggit:0.6:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.noggit/noggit/jars/noggit-0.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.noggit/noggit/srcs/noggit-0.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
